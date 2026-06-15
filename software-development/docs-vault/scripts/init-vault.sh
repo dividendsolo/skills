@@ -10,6 +10,50 @@ repo_name="$(basename "$ROOT")"
 # picker / title bar instead of a generic "vault".
 VAULT="$ROOT/docs/${repo_name}-vault"
 
+ensure_agents_block() {
+  local root="$1" vault="$2"          # vault = folder name, e.g. docket-vault
+  local agents="$root/AGENTS.md"
+  local begin="<!-- docs-vault:begin (managed by the docs-vault skill; edit the skill, not this block) -->"
+  local end="<!-- docs-vault:end -->"
+  local block
+  block="$(cat <<EOF
+$begin
+## Knowledge vault
+
+This repo has an Obsidian knowledge vault at \`docs/$vault/\`.
+
+- Before exploring the code, read \`docs/$vault/_index.md\` and treat the vault
+  as the first source of truth. Follow its links to the relevant code; only read
+  code directly when the vault does not cover what you need.
+- After completing a unit of work that is implemented, verified, and accepted,
+  update the vault: add or revise notes for new findings, gotchas, standards, and
+  decisions; add wikilinks and code links; update \`_index.md\`; bump \`updated:\`.
+  Record only durable, verified knowledge, never speculation.
+$end
+EOF
+)"
+  if [ ! -e "$agents" ]; then
+    printf '# %s\n\n%s\n' "$(basename "$root")" "$block" > "$agents"
+    echo "created $agents with vault block"
+  elif grep -qF "$begin" "$agents"; then
+    local tmp replf; tmp="$(mktemp)"; replf="$(mktemp)"
+    printf '%s\n' "$block" > "$replf"
+    # Read the replacement block from a file (not a -v string) so BSD awk does
+    # not choke on the embedded newlines. Replace everything between the begin
+    # and end sentinels in place.
+    awk -v b="$begin" -v e="$end" -v replf="$replf" '
+      $0==b {while ((getline line < replf) > 0) print line; close(replf); skip=1; next}
+      skip && $0==e {skip=0; next}
+      !skip {print}
+    ' "$agents" > "$tmp" && mv "$tmp" "$agents"
+    rm -f "$replf"
+    echo "updated vault block in $agents"
+  else
+    printf '\n%s\n' "$block" >> "$agents"
+    echo "appended vault block to $agents"
+  fi
+}
+
 mkdir -p \
   "$VAULT/architecture" \
   "$VAULT/domain" \
@@ -66,5 +110,7 @@ EOF
 else
   echo "exists  $INDEX (left untouched)"
 fi
+
+ensure_agents_block "$ROOT" "$(basename "$VAULT")"
 
 echo "vault ready at $VAULT"
