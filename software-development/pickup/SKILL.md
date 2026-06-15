@@ -19,6 +19,19 @@ Heavy detail is in `references/` and `scripts/`; pull those in only when you
 actually need them (e.g. scripting Linear MCP calls). The spine below is what you
 always need.
 
+## Model (Claude Code only)
+The *engineering* in this workflow — the test-first implementation (sections 6-8)
+— runs on **Sonnet**, not Opus. Opus is overkill for mechanical red-green-refactor
+coding. If you are orchestrating on Opus, dispatch the implementation to a
+**Sonnet subagent** (Task/Agent tool, `model: sonnet`): hand it the ticket, the
+acceptance criteria, the failing-test-first discipline, and the applicable
+`LEARNINGS.md` / `AGENTS.md` / `docs/adr/` constraints, and have it implement and
+run the gates. Keep the judgment work on Opus — ticket selection, the
+vertical-slice gate, the Triage/Needs-Info interview, the human walkthrough, and
+the PR/reviewer interaction. If the session is already Sonnet, just implement
+inline. This applies only in Claude Code; Hermes runs its own model, so ignore it
+there.
+
 ## 0. Resolve the tracker (AFK registry)
 Look up the repo root (`git rev-parse --show-toplevel`) in `~/.claude/afk.json`
 under `repos`. The entry names the tracker (`github` or `linear`), the board
