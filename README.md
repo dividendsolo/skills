@@ -29,6 +29,12 @@ pre-existing real (non-symlink) skill directory is left untouched, never clobber
 
 ## Skills
 
+- **software-development/triage** — groom and route tickets on ANY board through
+  a shared status vocabulary (`Triage` -> `Ready for Agent` / `Ready for Human`),
+  tracker-agnostic (GitHub Projects, Linear, or any board via a small adapter).
+  Owns the pre-implementation flow; pairs with `pickup` (executes) and
+  `reviewer-pickup` (merges). James-owned replacement for the matt-pocock triage.
+
 - **software-development/startup** — make a repo agent-ready in one move: git,
   AGENTS.md + CLAUDE.md, .gitignore, and a per-repo Obsidian vault, plus the
   pinned default stack (Bun, Next.js, Supabase, Drizzle, Tailwind+shadcn, Biome,
