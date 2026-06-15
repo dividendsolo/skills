@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# post-merge: after a `git pull` / `git merge`, link any newly-pulled skills into
+# this machine's skills dirs. Wired up by install.sh (sets core.hooksPath=.githooks).
+#
+# Edits to EXISTING skills are already live through their symlinks; this hook only
+# catches brand-new skill directories that have no symlink on this machine yet.
+# Stays silent on a normal pull (no new skills); speaks only when it links something.
+set -euo pipefail
+
+REPO="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+[ -x "$REPO/install.sh" ] || exit 0
+
+# --check exits nonzero iff a skill link is missing. Only then do the (idempotent,
+# non-destructive) install run, which prints exactly what it links.
+if ! "$REPO/install.sh" --check >/dev/null 2>&1; then
+  echo "[skills] new or missing skills detected, linking..."
+  "$REPO/install.sh"
+fi
+exit 0
