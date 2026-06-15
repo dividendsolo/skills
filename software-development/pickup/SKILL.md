@@ -169,7 +169,7 @@ If multiple labels apply or routing is ambiguous, state your read and ask which 
   (PR reviews, inline comments, latest board comments). Write a failing test per
   reported bug, address every requested change scoped to the feedback, gates green,
   commit, push, reply on the PR + board, move back to **In Review**.
-- **Todo / Ready (new):** after the gate, claim+unassign (5), branch (6), read
+- **Ready for Agent (new):** after the gate, claim+unassign (5), branch (6), read
   `AGENTS.md` + `docs/adr/` first, implement test-first to satisfy every AC, gates
   green, commit, push, open the PR, move to **In Review**.
 
@@ -221,7 +221,7 @@ sets tier/gating semantics, or warrants an ADR, the interview must update
 conversation alone is enough. After resolving, apply the category label and the new
 status; don't auto-advance to implementation in the same session unless told to.
 
-## Human walkthrough (Ready for Human / HITL)
+## Human walkthrough (Ready for Human)
 The user does the work (reads samples, exercises the UI, makes the judgement call,
 accesses systems you can't reach). Keep them in flow: hold the rubric, surface one
 step at a time, capture findings, draft the closeout.
