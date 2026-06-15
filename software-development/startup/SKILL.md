@@ -24,6 +24,9 @@ It ensures, without ever clobbering existing file contents:
 4. `.gitignore` defaults
 5. the Obsidian knowledge vault via the `docs-vault` skill (creates
    `docs/<repo>-vault/` and the read-first/write-after block in `AGENTS.md`)
+6. an AFK board registry entry via the `afk-setup` skill (best-effort: registers a
+   GitHub board inferred from the origin remote; a Linear board is set up later
+   with `/afk-setup`)
 
 ## Default stack (pinned; edit HERE to pivot for all future repos)
 

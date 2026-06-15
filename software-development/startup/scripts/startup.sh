@@ -84,4 +84,15 @@ else
   echo "WARN: docs-vault init-vault.sh not found at $VAULT_INIT; skipping vault" >&2
 fi
 
+# 6. AFK board registry entry (delegates to the afk-setup skill's generator).
+#    Best-effort: it auto-registers a GitHub board inferred from the origin remote.
+#    A Linear board cannot be inferred, so register it later with /afk-setup.
+AFK_INIT="$SCRIPT_DIR/../../afk-setup/scripts/init-afk.sh"
+if [ -f "$AFK_INIT" ]; then
+  bash "$AFK_INIT" --root "$ROOT" 2>/dev/null \
+    || echo "afk: no board registered yet (run /afk-setup once the board exists)"
+else
+  echo "WARN: afk-setup init-afk.sh not found at $AFK_INIT; skipping afk registry" >&2
+fi
+
 echo "startup: $name is agent-ready"
