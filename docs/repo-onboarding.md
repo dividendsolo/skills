@@ -41,49 +41,65 @@ Per repo, idempotent where possible:
 ## Step 0: decide what is in scope
 
 Not every directory under `~/Developer/repos` is a working repo. Many are dead
-experiments and should be skipped or archived, not onboarded. Mark each one before
-doing any work. As of 2026-06-15 the candidates are below (state column is the quick
-probe: git / AGENTS.md / vault / LEARNINGS.md / biome.json present).
+experiments and should be skipped or archived, not onboarded. The target set is
+small: the `skills` repo plus the active private projects, roughly 10 total. Mark
+each one before doing any work. As of 2026-06-15 the candidates are below (state =
+quick probe of git / AGENTS.md / vault / LEARNINGS.md / biome.json present;
+visibility from GitHub).
 
-| Repo | Current state | In scope? | Tracker | Notes |
-|---|---|---|---|---|
-| docket | git AGENTS vault LEARN biome | DONE (reference) | Linear | the standard |
-| recall | git AGENTS | ? | ? | RAG MVP, client work |
-| fieldlog | git AGENTS | ? | ? | dispatch console MVP |
-| mission-control | git AGENTS | ? | ? | ADRs / strategy home |
-| dividend-solo | git AGENTS biome | ? | ? | |
-| echo-form | git AGENTS biome | ? | ? | |
-| portolio | git AGENTS biome | frozen | ? | superseded by docket |
-| rep-sheet | git AGENTS biome | ? | ? | |
-| reddit-marketing-agent | git AGENTS biome | ? | ? | |
-| zero-phase | git AGENTS biome | ? | ? | |
-| pointy | git AGENTS | ? | ? | |
-| viral-audit | git AGENTS | ? | ? | |
-| fundamentals-api | git biome | ? | ? | SEC numbers source |
-| browser-harness | git AGENTS | tooling | n/a | global skill, maybe exempt |
-| ralph-loop | git | ? | ? | the loop runner itself |
-| lookout, darndest, dmarc-reader, manifesto-bot, vercel-discord-bridge | git, sparse | ? | ? | |
-| ai, brecka-timer, practice | not git / scratch | likely skip | n/a | experiments |
-| dotfiles, skills | infra (not loop targets) | n/a | n/a | skills is the toolbox |
+| Repo | Visibility | Current state | In scope? | Tracker | Notes |
+|---|---|---|---|---|---|
+| docket | private | AGENTS vault LEARN biome | DONE (reference) | Linear | the standard |
+| recall | private | AGENTS | ? | ? | RAG MVP, client work |
+| fieldlog | private | AGENTS | ? | ? | dispatch console (slug field-log) |
+| mission-control | private | AGENTS | ? | ? | ADRs / strategy home |
+| fundamentals-api | private | biome | ? | ? | SEC numbers source |
+| dividend-solo | private | AGENTS biome | ? | ? | |
+| echo-form | private | AGENTS biome | ? | ? | slug feedback-board |
+| rep-sheet | private | AGENTS biome | ? | ? | |
+| reddit-marketing-agent | private | AGENTS biome | ? | ? | |
+| zero-phase | private | AGENTS biome | ? | ? | |
+| pointy | private | AGENTS | ? | ? | |
+| viral-audit | private | AGENTS | ? | ? | |
+| lookout | private | git | ? | ? | |
+| darndest | private | git | ? | ? | |
+| manifesto-bot | private | git | ? | ? | |
+| vercel-discord-bridge | public | git | ? | ? | |
+| ralph-loop | public | git | n/a | n/a | the loop runner (tool, not a loop target) |
+| portolio | private | AGENTS biome | frozen | n/a | superseded by docket |
+| dotfiles | private | git | n/a | n/a | infra, not a loop target |
+| skills | public | infra | n/a | n/a | the toolbox itself |
+| browser-harness | public (browser-use org) | AGENTS | exempt | n/a | not yours; global tool |
+| dmarc-reader | local only | biome | likely skip | n/a | no git remote |
+| ai, brecka-timer, practice | local only | scratch | skip | n/a | experiments, not git repos |
 
 James fills the "In scope?" and "Tracker" columns; only in-scope repos get the full
-treatment.
+treatment. Public vs private does not decide scope (it is informational); active vs
+dead does.
 
-## Automation: how far startup.sh gets us
+## Automation: how far /startup gets us
 
-`startup.sh <repo-root>` already does steps 1, 2, 3, and 6 (GitHub-inferred)
-idempotently on any existing repo. So the bulk is:
+The entry point is the **`/startup` skill**, not the raw script. The skill wraps
+`startup.sh` with the guardrails that matter: it confirms before running, gates the
+stack layer (never runs a project generator in a non-empty repo), and prints a
+what's-left summary. Per in-scope repo, open it and invoke `/startup`:
 
-```bash
-# from the skills checkout, for each in-scope repo:
-bash software-development/startup/scripts/startup.sh /Users/james/Developer/repos/<repo>
+```
+cd /Users/james/Developer/repos/<repo>   # then invoke /startup in Claude Code
 ```
 
-What that does NOT cover, and why (the manual / judgment steps):
+Under the hood that runs `startup.sh`, which does steps 1, 2, 3, and 6
+(GitHub-inferred) idempotently. What it does NOT cover, and why (the manual /
+judgment steps):
 
-- **Linear AFK entry** (step 6): needs team + project, which cannot be inferred. Run
-  `init-afk.sh --tracker linear --linear-team ... --linear-project ...` per Linear
-  repo, or `/afk-setup` interactively.
+- **Wrong tracker guess for Linear repos** (step 6): startup records which board a
+  repo's tickets live on by guessing from the git remote. A `github.com` remote makes
+  it write `tracker: github` (GitHub Issues). That is correct for GitHub-Issues repos
+  but WRONG for any repo whose board is actually Linear (e.g. docket lives on
+  github.com but tracks on Linear), and it would point the loop at empty GitHub
+  Issues. Fix per Linear repo, after startup: `/afk-setup --force` (or
+  `init-afk.sh --force --tracker linear --linear-team ... --linear-project ...`) to
+  overwrite the guessed entry with the right Linear team + project.
 - **Board shape** (step 7): creating Linear statuses / labels / priority is manual UI
   work. Reviewer + triage skills assume the vocabulary exists.
 - **No-em-dash gate** (step 4): not yet in startup. Either copy
@@ -103,9 +119,9 @@ What that does NOT cover, and why (the manual / judgment steps):
 ## Suggested order
 
 1. James marks the in-scope repos and their trackers (step 0 table).
-2. For each in-scope repo: run `startup.sh` (steps 1, 2, 3, 6-GitHub).
+2. For each in-scope repo: invoke `/startup` (steps 1, 2, 3, 6-GitHub).
 3. Add the no-em-dash gate and `LEARNINGS.md` where missing (steps 4, 5).
 4. Set up the board vocabulary / labels / priority per tracker (step 7).
-5. Register Linear repos in `afk.json` with explicit team/project (step 6).
+5. For Linear repos, correct the afk entry with `/afk-setup --force` (step 6).
 6. Run `./install.sh` on the VPS (step 8); add loop repos to the cron (step 9).
 7. Spot-check each with `/triage` or `/pickup` to confirm the loop resolves the board.
