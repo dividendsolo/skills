@@ -21,6 +21,14 @@ for d in architecture domain how-it-works standards decisions gotchas; do
   [ -e "$keep" ] || : > "$keep"
 done
 
+# Obsidian writes per-machine UI state into .obsidian/ when the vault is opened.
+# Keep it out of git so the vault stays portable as pure markdown.
+GITIGNORE="$VAULT/.gitignore"
+if [ ! -e "$GITIGNORE" ]; then
+  printf '%s\n' '.obsidian/' > "$GITIGNORE"
+  echo "created $GITIGNORE"
+fi
+
 INDEX="$VAULT/_index.md"
 if [ ! -e "$INDEX" ]; then
   repo_name="$(basename "$ROOT")"

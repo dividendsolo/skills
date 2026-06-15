@@ -32,8 +32,9 @@ If `docs/vault/` does not exist yet, scaffold it (idempotent):
 bash <path-to-this-skill>/scripts/init-vault.sh "$(git rev-parse --show-toplevel)"
 ```
 
-This creates `_index.md` and the category folders. Obsidian creates `.obsidian/`
-itself when first opened; you do not create it.
+This creates `_index.md`, the category folders, and a `.gitignore` that excludes
+`.obsidian/`. Obsidian creates `.obsidian/` itself when first opened (per-machine
+UI state); you do not create it and it is not committed.
 
 ## Layout
 
@@ -71,7 +72,11 @@ Ingestion pulls a filing from EDGAR and writes ordered [[Chunk]]s into the
 Rules:
 - `title`, `tags`, `updated` (today's date, `YYYY-MM-DD`), and `code` (repo-relative
   paths the note describes) are required in frontmatter.
-- Link notes to each other with `[[wikilinks]]`.
+- Link notes to each other with `[[wikilinks]]`. Obsidian resolves a wikilink by
+  **filename** (or by an alias), NOT by the H1/title. So `[[glossary]]` resolves
+  to `glossary.md`. If you want to link by a human title that differs from the
+  filename, add `aliases: [Domain glossary]` to that note's frontmatter, then
+  `[[Domain glossary]]` resolves too. Pick one convention per vault and keep it.
 - Link to code and existing docs with relative markdown links (e.g.
   `../../CONTEXT.md`, `../adr/0003-....md`).
 - Keep notes small and durable. State how things work and why; do not paste code.
