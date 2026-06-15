@@ -14,7 +14,7 @@ cd "$ROOT"
 name="$(basename "$ROOT")"
 
 # 1. git
-if [ ! -d .git ]; then git init -q; echo "git init"; else echo "git: already a repo"; fi
+if [ ! -d .git ]; then git init -q -b main 2>/dev/null || { git init -q; git symbolic-ref HEAD refs/heads/main; }; echo "git init (main)"; else echo "git: already a repo"; fi
 
 # 2. AGENTS.md (only create if missing; never overwrite existing content)
 if [ ! -e AGENTS.md ]; then
