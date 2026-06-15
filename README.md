@@ -17,14 +17,23 @@ hermes skills tap add dividendsolo/skills
 hermes skills install dividendsolo/skills/software-development/pickup
 ```
 
-For local development (live edits — the worker sees changes immediately), symlink
-instead of installing:
+For local development (live edits — both runtimes see changes immediately),
+symlink instead of installing:
 
 ```bash
-./install.sh        # symlinks every skill in this repo into ~/.hermes/skills/
+./install.sh        # symlinks every skill into ~/.hermes/skills/ AND ~/.claude/skills/
 ```
 
+Override targets with `HERMES_SKILLS_DIR` / `CLAUDE_SKILLS_DIR` if needed. A
+pre-existing real (non-symlink) skill directory is left untouched, never clobbered.
+
 ## Skills
+
+- **software-development/docs-vault** — read and write a per-repo, in-repo
+  Obsidian knowledge base at `docs/vault/` (architecture, domain, how-it-works,
+  standards, decisions, gotchas). Git is the sync layer, so the same skill works
+  for local Claude Code and remote Hermes. Load it before engineering/reviewing
+  to get context; write notes back as you learn.
 
 - **software-development/pickup** — at the start of any task, load the project's
   `LEARNINGS.md` and treat past code-review lessons as binding constraints. The
