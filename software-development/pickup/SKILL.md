@@ -1,6 +1,6 @@
 ---
 name: pickup
-description: THE workflow for picking up and carrying ONE ticket/card forward — for an autonomous worker agent or for a human doing it locally. Resolves the repo's tracker from the AFK registry (~/.claude/afk.json; GitHub Projects or Linear), picks one ticket by priority, routes by status x label (interview / human walkthrough / execute), loads LEARNINGS.md as binding constraints, implements test-first, then branches to a PR for the reviewer. Use when the user says "pick up <id>", "work on issue <id>", invokes /pickup, or at the very start of working any card.
+description: THE workflow for picking up and carrying ONE ticket/card forward, for an autonomous worker agent or for a human doing it locally. Resolves the repo's tracker from the AFK registry (~/.claude/afk.json; GitHub Projects or Linear), picks one ticket by priority, routes by status x label (interview / human walkthrough / execute), loads LEARNINGS.md as binding constraints, implements test-first, then branches to a PR for the reviewer. Use when the user says "pick up <id>", "work on issue <id>", invokes /pickup, or at the very start of working any card.
 ---
 
 # Pickup
@@ -20,13 +20,13 @@ actually need them (e.g. scripting Linear MCP calls). The spine below is what yo
 always need.
 
 ## Model (Claude Code only)
-The *engineering* in this workflow — the test-first implementation (sections 6-8)
-— runs on **Sonnet**, not Opus. Opus is overkill for mechanical red-green-refactor
+The *engineering* in this workflow (the test-first implementation, sections 6-8)
+runs on **Sonnet**, not Opus. Opus is overkill for mechanical red-green-refactor
 coding. If you are orchestrating on Opus, dispatch the implementation to a
 **Sonnet subagent** (Task/Agent tool, `model: sonnet`): hand it the ticket, the
 acceptance criteria, the failing-test-first discipline, and the applicable
 `LEARNINGS.md` / `AGENTS.md` / `docs/adr/` constraints, and have it implement and
-run the gates. Keep the judgment work on Opus — ticket selection, the
+run the gates. Keep the judgment work on Opus: ticket selection, the
 vertical-slice gate, the Triage/Needs-Info interview, the human walkthrough, and
 the PR/reviewer interaction. If the session is already Sonnet, just implement
 inline. This applies only in Claude Code; Hermes runs its own model, so ignore it
@@ -40,7 +40,7 @@ the board coordinates, the board's `readyStatus` / `humanStatus` strings, and
 
 Every board speaks the same **shared status vocabulary** (`Triage`,
 `Ready for Agent`, `Ready for Human`, `In Progress`, `In Review`,
-`Changes Requested`, `Done`) — the same one `triage` and `reviewer-pickup` use.
+`Changes Requested`, `Done`), the same one `triage` and `reviewer-pickup` use.
 Only the mechanics differ (GitHub via `gh`, Linear via the MCP, any future tracker
 via the same five operations); see **Trackers** at the bottom. Resolve the actual
 status strings from `afk.json` (they should match the canonical names verbatim).
@@ -49,12 +49,12 @@ status strings from `afk.json` (they should match the canonical names verbatim).
 Gather the project's eligible issues. Ready means the board's `readyStatus`
 (canonically `Ready for Agent`). Pick in this priority order, never skipping a step:
 
-1. **In Progress (mine)** — work I already started. "Mine" = an open branch for
+1. **In Progress (mine):** work I already started. "Mine" = an open branch for
    this ticket whose latest commit is mine, or a PR I opened. NOT just any In
    Progress card. Resume it.
-2. **Changes Requested** — work the reviewer kicked back. Finish this before any
+2. **Changes Requested:** work the reviewer kicked back. Finish this before any
    new work; the context is freshest and it clears the board cheapest.
-3. **Ready for Agent** — fresh work, only if (1) and (2) are empty.
+3. **Ready for Agent:** fresh work, only if (1) and (2) are empty.
 
 Within a group: higher priority first, then older `createdAt`. **Skip** a ticket
 whose blockers are not all Done. **Skip** any ticket carrying a `Needs Triage` /
@@ -70,7 +70,7 @@ Before writing any code, look for `LEARNINGS.md` at the repo root.
 - If present, **read it in full**. These are hard-won rules the senior reviewer
   distilled from past PR-review kickbacks on *this* project. Treat every entry as
   a **binding constraint**, equal in force to `AGENTS.md` and repo conventions.
-- If absent or empty, fine — proceed. Empty is normal for a young project.
+- If absent or empty, fine. Proceed. Empty is normal for a young project.
 - **Never write to `LEARNINGS.md`.** You read it; only the reviewer curates it. If
   you find a lesson worth recording, surface it in your PR description so the
   reviewer can decide.
@@ -79,23 +79,23 @@ Before writing any code, look for `LEARNINGS.md` at the repo root.
 Read the ticket's title, labels, body, any agent-brief comment, and its **board
 status**. Status is the canonical state machine; labels carry *kind-of-work*
 (bug / enhancement / security / tech-debt / documentation / research), which is
-orthogonal. First, refuse if truly not actionable — tell the user why:
+orthogonal. First, refuse if truly not actionable (tell the user why):
 - Closed, or status `Done` (already shipped), `Canceled`, or `Duplicate`.
-- Status `Backlog` (parked) — ask if they want to revive it before doing anything.
+- Status `Backlog` (parked): ask if they want to revive it before doing anything.
 
 Otherwise route by status:
 
 | Status | Path |
 |---|---|
-| `Triage` (+ `needs-info` label) | **Interview** — resolve open design questions (see Interview discipline). Resolution flips status/label, NOT code. This is `triage`'s job; pickup only interviews if asked. |
+| `Triage` (+ `needs-info` label) | **Interview:** resolve open design questions (see Interview discipline). Resolution flips status/label, NOT code. This is `triage`'s job; pickup only interviews if asked. |
 | `Ready for Human` | **Human walkthrough** (see below). You co-pilot; the user does the work. |
-| `Ready for Agent` | **Execute** — sections 4-9. |
-| `In Progress` (mine) / `Changes Requested` | **Resume / rework** — section 8, skip the gate. |
+| `Ready for Agent` | **Execute:** sections 4-9. |
+| `In Progress` (mine) / `Changes Requested` | **Resume / rework:** section 8, skip the gate. |
 
 **No exceptions for the interview paths.** Even if the body looks well-spec'd, run
-the interview — the maintainer needs the structured Q&A, not your read of the body.
+the interview; the maintainer needs the structured Q&A, not your read of the body.
 
-## 4. Vertical-slice gate (new tickets only — never re-gate started work)
+## 4. Vertical-slice gate (new tickets only; never re-gate started work)
 Before starting NEW work, confirm the ticket is a TRUE vertical slice:
 
 <vertical-slice-rules>
@@ -111,7 +111,7 @@ fat-but-complete slice is fine.)
 
 - **Interactive (you, locally):** STOP. Surface the failure and prompt the user to
   help thin/split it; offer to run `/to-issues`. Do not "just start on the first
-  bit" — wait for the decision on how to slice it.
+  bit"; wait for the decision on how to slice it.
 - **Autonomous (worker):** add a `Needs Triage` label, post a comment explaining
   why and how to split/sharpen, do NOT branch or code, and STOP.
 
@@ -138,10 +138,10 @@ When **resuming**, find the existing branch by identifier
 (`git branch -a --list "*<identifier>-*"`) or the open PR's head branch; check it
 out. Do NOT reset or check out main (that discards in-flight work).
 
-## 7. Implement test-first, routed by label — NON-NEGOTIABLE
+## 7. Implement test-first, routed by label (NON-NEGOTIABLE)
 Every code path is done test-first (use the `tdd` skill; follow red-green-refactor):
 - **RED FIRST:** write the failing test and see it fail for the right reason. A
-  new/changed test green on first run is wrong — fix the test.
+  new/changed test green on first run is wrong; fix the test.
 - **Assert behaviour/structure, not substrings.** A substring check that passes on
   broken output is a defect.
 - Honor every applicable `LEARNINGS.md` entry, `AGENTS.md`, and `docs/adr/`.
@@ -173,7 +173,7 @@ If multiple labels apply or routing is ambiguous, state your read and ask which 
   `AGENTS.md` + `docs/adr/` first, implement test-first to satisfy every AC, gates
   green, commit, push, open the PR, move to **In Review**.
 
-## 9. Stop at the PR — do not merge
+## 9. Stop at the PR (do not merge)
 Open/advance the PR and move the card to **In Review**, then **STOP**. The senior
 reviewer (`reviewer-pickup`) owns the merge. Even if a repo's `AGENTS.md` grants
 self-merge, do not push the merge button, do not auto-merge via CI, do not delete
@@ -181,25 +181,25 @@ the branch. The reviewer signals completion by moving the card to Done (or to
 Changes Requested, which comes back to you on the next pickup).
 
 Non-execution outcomes (from any path):
-- **Needs Info** — implementation surfaced a question only the reporter can answer.
+- **Needs Info:** implementation surfaced a question only the reporter can answer.
   Post a comment (with the disclaimer) listing the specific questions; set status
   **Needs Info** / `Backlog`. Do NOT commit speculative code.
-- **Blocked** — a dependency surfaced mid-flight. Add a `blocked`/`blockedBy`
+- **Blocked:** a dependency surfaced mid-flight. Add a `blocked`/`blockedBy`
   marker, comment naming the blocker, leave status as-is.
 
-### Closing summary (STRICT — exactly four items)
+### Closing summary (STRICT: exactly four items)
 Write each as a standalone **paragraph** (bold label + text), separated by blank
 lines (list markers render tight in the terminal; `&nbsp;` prints literally). No
-file lists, no diffs, no per-file walkthrough — the user does not read them.
+file lists, no diffs, no per-file walkthrough. The user does not read them.
 
 ```
 **What the card was:** <the issue in one line>
 
-**What we did:** <the change in plain terms — outcomes, not file paths>
+**What we did:** <the change in plain terms, outcomes not file paths>
 
 **How it was verified:** <tests run + result, typecheck/lint, any visual check>
 
-**Manual QA:** <"none needed — covered by X" OR the specific thing the human must
+**Manual QA:** <"none needed (covered by X)" OR the specific thing the human must
 eyeball/click and why an agent couldn't>
 ```
 
@@ -246,7 +246,7 @@ Any comment you post on a ticket during pickup must start with:
 > *This was generated by AI during pickup.*
 ```
 
-## Trackers (mechanics only — the vocabulary is shared)
+## Trackers (mechanics only; the vocabulary is shared)
 Every board uses the same status vocabulary; only the API differs. Resolve the
 tracker and the actual status strings from `afk.json`.
 - **GitHub Projects:** `gh issue view` to read; `gh project item-edit` to set
@@ -254,8 +254,8 @@ tracker and the actual status strings from `afk.json`.
 - **Linear:** load MCP tools via ToolSearch (`get_issue`, `list_comments`,
   `save_issue`, `save_comment`); fetch by identifier (e.g. `JAM-6`); set status
   with `save_issue { state }`.
-- **Any other tracker:** implement the same five operations — fetch, set status,
-  add/remove label, comment, close. Nothing else here is tracker-specific.
+- **Any other tracker:** implement the same five operations (fetch, set status,
+  add/remove label, comment, close). Nothing else here is tracker-specific.
 
 Kind-of-work labels (bug/enhancement/etc.) may not exist in a young workspace;
 infer the route from the body and say so. If a specific CLI/MCP call isn't to
@@ -267,7 +267,7 @@ hand, ask the user once rather than doing it manually.
   chat replies terse. The user reads the board.
 - Never push to `main` outside a PR. Never merge your own PR.
 - Commit working progress as you go; never end a run with unrecoverable uncommitted
-  work — the next run resumes from your commits. If you can't make the gates pass
+  work; the next run resumes from your commits. If you can't make the gates pass
   or the ticket is unclear, commit what you have, comment the blocker, leave it In
   Progress, and stop. Don't open a broken PR.
 - For ad-hoc tooling on this machine, use **TypeScript** (`bun`/`tsx`), not Python.
@@ -282,7 +282,7 @@ hand, ask the user once rather than doing it manually.
   mention inline.
 
 ## References (load on demand)
-- `references/linear-mcp-schema.md` — Linear MCP field-name gotchas and response
+- `references/linear-mcp-schema.md`: Linear MCP field-name gotchas and response
   shapes. Read before scripting MCP calls or on a `-32602 unrecognized_keys` error.
-- `scripts/linear-mcp-client.ts` — minimal Linear MCP client over HTTP+JSON-RPC.
-- `scripts/linear-open.ts` — "what's open for me to pick up?" board reader.
+- `scripts/linear-mcp-client.ts`: minimal Linear MCP client over HTTP+JSON-RPC.
+- `scripts/linear-open.ts`: "what's open for me to pick up?" board reader.

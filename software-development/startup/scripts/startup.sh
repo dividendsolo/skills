@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# startup.sh — make a repo agent-ready (idempotent meta layer). Run from the repo
+# startup.sh: make a repo agent-ready (idempotent meta layer). Run from the repo
 # root, or pass it as $1. Safe to re-run; never clobbers existing file contents.
 # Does NOT scaffold an app stack (that is gated/confirmed in the skill body).
 set -euo pipefail

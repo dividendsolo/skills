@@ -1,6 +1,6 @@
 ---
 name: docs-vault
-description: Use when you need durable, repo-specific context — architecture, domain model, how a flow works, standards, gotchas, decisions — before engineering or reviewing, or when you have learned something worth recording. Reads and writes an in-repo Obsidian knowledge base (docs/<repo>-vault/), synced by git.
+description: Use when you need durable, repo-specific context (architecture, domain model, how a flow works, standards, gotchas, decisions) before engineering or reviewing, or when you have learned something worth recording. Reads and writes an in-repo Obsidian knowledge base (docs/<repo>-vault/), synced by git.
 ---
 
 # docs-vault
@@ -26,7 +26,7 @@ The vault lives at `<repo-root>/docs/<repo-name>-vault/`, where `<repo-name>` is
 the repo's directory name. The folder is named `<repo-name>-vault` (e.g.
 `docs/docket-vault/`) on purpose: Obsidian takes its vault name from the opened
 folder, so this makes the repo name show in Obsidian's picker and title bar
-instead of a generic "vault". Resolve `<repo-root>` per runtime — see
+instead of a generic "vault". Resolve `<repo-root>` per runtime; see
 `references/runtimes.md`. In Claude Code: `git rev-parse --show-toplevel`.
 
 If the vault does not exist yet, scaffold it (idempotent):
@@ -43,7 +43,7 @@ UI state); you do not create it and it is not committed.
 
 ```
 docs/<repo>-vault/
-├── _index.md      Map of Content — entry point; links to every note
+├── _index.md      Map of Content: entry point; links to every note
 ├── architecture/  how subsystems fit together
 ├── domain/        domain model + ubiquitous language
 ├── how-it-works/  walkthroughs of real flows
@@ -92,7 +92,7 @@ Rules:
 
 ## Reading / querying
 
-1. Read the vault's `_index.md` first — it maps what exists.
+1. Read the vault's `_index.md` first; it maps what exists.
 2. Then search the vault:
    - Claude Code: Grep/Glob over `docs/<repo>-vault/**` (search `tags:` and `code:`
      to find notes about a file or topic).
@@ -102,7 +102,7 @@ Rules:
 ## Writing / updating
 
 Write back when you finish a unit of work that is implemented, verified, and
-accepted — not mid-task and not speculatively. Record durable knowledge: a
+accepted, not mid-task and not speculatively. Record durable knowledge: a
 non-obvious flow, a gotcha, a standard, a decision, or a corrected link. This is
 the write half of the self-healing loop; the repo's `AGENTS.md` carries the
 read-first/write-after instruction (managed by `init-vault.sh`).
@@ -112,10 +112,10 @@ read-first/write-after instruction (managed by `init-vault.sh`).
 3. Set `updated:` to today.
 4. Commit: `git add docs/<repo>-vault && git commit -m "docs(vault): ..."`. Push
    per the repo's policy. (Solo-dev repos: straight to the default branch unless
-   the repo's own AGENTS.md says otherwise — check it.)
+   the repo's own AGENTS.md says otherwise; check it.)
 
 Under Hermes Docker, write to the bind-mounted container path so files reach the
-host — see `references/runtimes.md`.
+host. See `references/runtimes.md`.
 
 ## Discovery hook
 
@@ -129,4 +129,4 @@ Use the repo's actual vault folder name. Add it once if missing; do not duplicat
 ## Accuracy
 
 Notes must be verified against the code, never guessed. If a note disagrees with
-the code, the code wins — fix the note and bump `updated:`.
+the code, the code wins: fix the note and bump `updated:`.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh — symlink every skill in this repo into BOTH the Hermes skills dir
+# install.sh: symlink every skill in this repo into BOTH the Hermes skills dir
 # and the Claude Code skills dir so local edits are live. Idempotent and
 # non-destructive: a pre-existing real (non-symlink) destination is left untouched
 # and reported, never clobbered.

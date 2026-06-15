@@ -1,4 +1,4 @@
-// "What work is open for me to pick up?" — board view filtered to Todo only.
+// "What work is open for me to pick up?" Board view filtered to Todo only.
 // Honors the user's rule: open = Todo (statusType: unstarted). In Progress and
 // In Review are flagged as "owned by other agents" but not shown in detail.
 //
@@ -68,7 +68,7 @@ const closed = issueList.filter(isClosed);
 console.log(`Todo (open): ${open.length}   Other-active: ${otherActive.length}   Closed: ${closed.length}   Total: ${issueList.length}`);
 if (otherActive.length > 0) {
   const who = otherActive.map((i) => `${i.id} [${i.status}]`).join(", ");
-  console.log(`(Other-active: ${who} — owned by other agents)\n`);
+  console.log(`(Other-active: ${who}, owned by other agents)\n`);
 } else {
   console.log();
 }

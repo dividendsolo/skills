@@ -1,5 +1,5 @@
 // Minimal Linear MCP client over HTTP+JSON-RPC.
-// Use this for any ad-hoc Linear scripting — it's the only sane way to talk
+// Use this for any ad-hoc Linear scripting; it's the only sane way to talk
 // to the hosted MCP without dragging in mcp-remote or stdio plumbing.
 //
 // Usage:
@@ -42,7 +42,7 @@ export class LinearMcpClient {
   async init(): Promise<void> {
     this.checkExpiry();
     // Handshake. Server may return method-not-found for the "initialized"
-    // notification — that's fine, it's a notification, not a request.
+    // notification; that's fine, it's a notification, not a request.
     await this.rpc("initialize", {
       protocolVersion: "2024-11-05",
       capabilities: {},

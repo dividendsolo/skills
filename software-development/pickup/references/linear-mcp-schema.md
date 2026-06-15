@@ -13,27 +13,27 @@ Headers:
 Body: { "jsonrpc":"2.0", "id":<n>, "method":"...", "params":{...} }
 ```
 
-Response is SSE — find the `data: ` line and `JSON.parse(line.slice(6))`. The `Mcp-Session-Id` header in the initialize response is `null` for hosted Linear MCP; you do not need to track sessions.
+Response is SSE: find the `data: ` line and `JSON.parse(line.slice(6))`. The `Mcp-Session-Id` header in the initialize response is `null` for hosted Linear MCP; you do not need to track sessions.
 
 ## `initialize` / `notifications/initialized`
 
-Handshake. `notifications/initialized` may return `method not found` from the server — that's fine, fire and forget. After this, `tools/list` and `tools/call` will work.
+Handshake. `notifications/initialized` may return `method not found` from the server (that's fine, fire and forget). After this, `tools/list` and `tools/call` will work.
 
-## `tools/list` — discover the 35 available tools
+## `tools/list`: discover the 35 available tools
 
 Useful ones for board work:
 
-- `list_projects` — find a project by name
-- `list_issues` — list issues (the most-bug-prone tool, see below)
-- `get_issue` — full description, attachments, branch
-- `save_issue` — create or update
-- `list_issue_statuses` — see what status names exist for a team
-- `list_users` — find assignees
-- `list_teams` — get team ID from name
-- `save_comment` / `list_comments` — issue thread
-- `search_documentation` — Linear's own docs (handy when stuck on a field)
+- `list_projects`: find a project by name
+- `list_issues`: list issues (the most-bug-prone tool, see below)
+- `get_issue`: full description, attachments, branch
+- `save_issue`: create or update
+- `list_issue_statuses`: see what status names exist for a team
+- `list_users`: find assignees
+- `list_teams`: get team ID from name
+- `save_comment` / `list_comments`: issue thread
+- `search_documentation`: Linear's own docs (handy when stuck on a field)
 
-## `list_issues` — the trap-rich one
+## `list_issues`: the trap-rich one
 
 ```ts
 // CORRECT
@@ -55,7 +55,7 @@ rpc("tools/call", {
 | --- | --- |
 | `projectId` | `project` (name, ID, or slug) |
 | `first` | `limit` (default 50, max 250) |
-| `state` (multi) | `state` (single value only — see below) |
+| `state` (multi) | `state` (single value only; see below) |
 | `query` | `query` (text search of title/description) ✓ |
 
 ### The `state` parameter is single-value
@@ -80,11 +80,11 @@ const open = issues.filter(i => i.statusType === "unstarted");
 
 `statusType` values in the wild for this user:
 
-- `unstarted` → "Todo" — **open, pick it up**
-- `started` → "In Progress" or "In Review" — **owned by another agent, do not touch**
-- `completed` → "Done" — terminal
-- `canceled` → "Cancelled" — terminal
-- `backlog` → "Backlog" — parked, do not pick up without explicit ask
+- `unstarted` → "Todo" (**open, pick it up**)
+- `started` → "In Progress" or "In Review" (**owned by another agent, do not touch**)
+- `completed` → "Done" (terminal)
+- `canceled` → "Cancelled" (terminal)
+- `backlog` → "Backlog" (parked, do not pick up without explicit ask)
 
 ### Result wrapper
 
@@ -99,11 +99,11 @@ const open = issues.filter(i => i.statusType === "unstarted");
 }
 ```
 
-So always: `JSON.parse(result.result.content[0].text)` to get the data. The wrapper key matches the tool name — `{ projects: [...] }` from `list_projects`, `{ issues: [...] }` from `list_issues`, `{ nodes: [...] }` from some other tools (it varies). Empty result is `[]` inside the named key, not `null`.
+So always: `JSON.parse(result.result.content[0].text)` to get the data. The wrapper key matches the tool name: `{ projects: [...] }` from `list_projects`, `{ issues: [...] }` from `list_issues`, `{ nodes: [...] }` from some other tools (it varies). Empty result is `[]` inside the named key, not `null`.
 
 ### Error shape
 
-When `isError: true`, the `content[0].text` is a **plain string** like `MCP error -32602: Input validation error: Invalid arguments for tool list_issues: ...`. Do not `JSON.parse` it — log as-is and read the message.
+When `isError: true`, the `content[0].text` is a **plain string** like `MCP error -32602: Input validation error: Invalid arguments for tool list_issues: ...`. Do not `JSON.parse` it; log as-is and read the message.
 
 ## `get_issue`
 
@@ -111,11 +111,11 @@ When `isError: true`, the `content[0].text` is a **plain string** like `MCP erro
 
 ## `save_issue`
 
-`{ id, state }` to move a card. **`state` is the field name, not `status`** — the skill docs and several references in the wild call it `status`, which gets an MCP error -32602 "unrecognized_keys: status". The value is the human name (`"In Progress"`, `"In Review"`, `"Done"`) — not the `statusType` enum. For new issues, omit `id` and pass `team`, `title`, `description`, optional `project` and `assignee`. **Response is the flat issue object, not wrapped** — `{ id, title, status, statusType, ... }` returned directly, not `{ issue: { id, status, ... } }`. The `{ issue: { ... } }` shape that some skill docs and references show is wrong; reading `.issue.status` will be `undefined`.
+`{ id, state }` to move a card. **`state` is the field name, not `status`** (the skill docs and several references in the wild call it `status`, which gets an MCP error -32602 "unrecognized_keys: status"). The value is the human name (`"In Progress"`, `"In Review"`, `"Done"`), not the `statusType` enum. For new issues, omit `id` and pass `team`, `title`, `description`, optional `project` and `assignee`. **Response is the flat issue object, not wrapped:** `{ id, title, status, statusType, ... }` returned directly, not `{ issue: { id, status, ... } }`. The `{ issue: { ... } }` shape that some skill docs and references show is wrong; reading `.issue.status` will be `undefined`.
 
 ## `save_comment`
 
-`{ issueId, body }` — `body` is markdown. The field is `issueId`, **not** `issue` (`issue` returns MCP error -32602 "unrecognized_keys: issue"). Use this to file progress notes, not chat. **Response is the flat comment object, not wrapped** — `{ id, body, createdAt, updatedAt, author: { id, name }, ... }` returned directly, not `{ comment: { id, ... } }`. To delete, use `delete_comment` with `{ id: "<comment id>" }` — useful for cleaning up probes or wrong-target posts.
+`{ issueId, body }` where `body` is markdown. The field is `issueId`, **not** `issue` (`issue` returns MCP error -32602 "unrecognized_keys: issue"). Use this to file progress notes, not chat. **Response is the flat comment object, not wrapped:** `{ id, body, createdAt, updatedAt, author: { id, name }, ... }` returned directly, not `{ comment: { id, ... } }`. To delete, use `delete_comment` with `{ id: "<comment id>" }`, useful for cleaning up probes or wrong-target posts.
 
 ## Token refresh
 

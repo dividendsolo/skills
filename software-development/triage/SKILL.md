@@ -1,6 +1,6 @@
 ---
 name: triage
-description: Groom and route tickets on ANY project board through a shared status vocabulary — from raw `Triage` to a fully spec'd `Ready for Agent` or `Ready for Human` — so pickup only ever executes work that is already specified. Tracker-agnostic (GitHub Projects, Linear, or any board via a small adapter). Use to create/triage/groom issues, prepare work for an AFK agent, or manage the pre-implementation flow. Pairs with pickup + reviewer-pickup.
+description: Groom and route tickets on ANY project board through a shared status vocabulary (from raw `Triage` to a fully spec'd `Ready for Agent` or `Ready for Human`) so pickup only ever executes work that is already specified. Tracker-agnostic (GitHub Projects, Linear, or any board via a small adapter). Use to create/triage/groom issues, prepare work for an AFK agent, or manage the pre-implementation flow. Pairs with pickup + reviewer-pickup.
 ---
 
 # Triage
@@ -34,16 +34,16 @@ verbatim. Any tracker only needs to support these five operations:
 Adapters today: **GitHub Projects** (`gh issue ...`, `gh project item-edit`),
 **Linear** (MCP `get_issue` / `save_issue` / `save_comment` / `list_comments`,
 loaded via ToolSearch). **Any new tracker:** implement those five operations and
-map the canonical names to its strings — nothing else here is tracker-specific.
+map the canonical names to its strings; nothing else here is tracker-specific.
 
 ## The board vocabulary (shared with pickup + reviewer-pickup)
 
 **Status = pipeline stage (columns).** Triage works the left end:
-- `Triage` — raw; needs evaluation/grooming. Triage's input.
-- `Ready for Agent` — fully spec'd; an AFK agent can pick it up. Triage output.
-- `Ready for Human` — fully spec'd, but needs a human (judgment, manual testing,
+- `Triage`: raw; needs evaluation/grooming. Triage's input.
+- `Ready for Agent`: fully spec'd; an AFK agent can pick it up. Triage output.
+- `Ready for Human`: fully spec'd, but needs a human (judgment, manual testing,
   or access an agent lacks). Triage output.
-- `In Progress` / `In Review` / `Changes Requested` / `Done` — owned by `pickup`
+- `In Progress` / `In Review` / `Changes Requested` / `Done`: owned by `pickup`
   and `reviewer-pickup`; triage does not move these.
 - Terminal: `Won't Fix` / `Canceled` (close the ticket).
 
@@ -51,7 +51,7 @@ map the canonical names to its strings — nothing else here is tracker-specific
 `bug`, `enhancement`, `security`, `tech-debt`, `documentation`, `research`.
 
 **Sub-state labels:**
-- `needs-info` — a `Triage` ticket blocked on the reporter. Stays in `Triage`;
+- `needs-info`: a `Triage` ticket blocked on the reporter. Stays in `Triage`;
   clears when they reply.
 
 A groomed ticket carries exactly one category label and lands in exactly one
@@ -67,35 +67,35 @@ Interpret and act. Examples:
 
 ## Show what needs attention
 Query the board and present, oldest first:
-1. **Untriaged** — never evaluated (no category label).
-2. **`Triage`** — evaluation in progress.
-3. **`needs-info` with reporter activity** since the last triage notes — needs re-evaluation.
+1. **Untriaged:** never evaluated (no category label).
+2. **`Triage`:** evaluation in progress.
+3. **`needs-info` with reporter activity** since the last triage notes: needs re-evaluation.
 
 Show counts and a one-line summary per ticket. Let the maintainer pick.
 
 ## Triage one ticket
 1. **Gather context.** Read the full ticket (body, comments, labels, reporter,
    dates) and any prior triage notes (don't re-ask resolved questions). Explore
-   the codebase via the repo's knowledge vault — start at `docs/<repo>-vault/_index.md`
-   if present — and the domain glossary, respecting ADRs in the area. Read
+   the codebase via the repo's knowledge vault (start at `docs/<repo>-vault/_index.md`
+   if present) and the domain glossary, respecting ADRs in the area. Read
    `.out-of-scope/*.md` and surface any prior rejection that resembles this ticket.
 2. **Recommend.** State your category + target-status recommendation with
    reasoning, plus a brief relevant codebase summary. Wait for direction.
 3. **Reproduce (bugs only).** Before any grilling, attempt reproduction: read the
-   steps, trace the code, run tests/commands. Report the result — successful repro
+   steps, trace the code, run tests/commands. Report the result: successful repro
    with code path, failed repro, or insufficient detail (a strong `needs-info`
    signal). A confirmed repro makes a much stronger brief.
 4. **Grill (if needed).** If the ticket needs fleshing out, run `/grill-with-docs`.
 5. **Apply the outcome:**
-   - `Ready for Agent` — post an agent brief (`references/agent-brief.md`), set
+   - `Ready for Agent`: post an agent brief (`references/agent-brief.md`), set
      status `Ready for Agent`.
-   - `Ready for Human` — same brief structure, plus why it can't be delegated
+   - `Ready for Human`: same brief structure, plus why it can't be delegated
      (judgment calls, external access, design decisions, manual testing); set
      status `Ready for Human`.
-   - `needs-info` — add the label, post triage notes (template below), keep status
+   - `needs-info`: add the label, post triage notes (template below), keep status
      `Triage`.
-   - `Won't Fix` (bug) — polite explanation, then close.
-   - `Won't Fix` (enhancement) — write to `.out-of-scope/` (`references/out-of-scope.md`),
+   - `Won't Fix` (bug): polite explanation, then close.
+   - `Won't Fix` (enhancement): write to `.out-of-scope/` (`references/out-of-scope.md`),
      link to it from a comment, then close.
 
 ## Quick status override
@@ -133,7 +133,7 @@ Keep the vocabulary identical across all three; that is what lets a ticket flow
 Triage -> Ready -> In Progress -> In Review -> Done on any tracker.
 
 ## References (load on demand)
-- `references/agent-brief.md` — the durable agent-brief format (the contract an
+- `references/agent-brief.md`: the durable agent-brief format (the contract an
   agent works from; survives refactors, no file paths/line numbers).
-- `references/out-of-scope.md` — the `.out-of-scope/` rejected-request knowledge
+- `references/out-of-scope.md`: the `.out-of-scope/` rejected-request knowledge
   base (institutional memory + dedup of feature rejections).
