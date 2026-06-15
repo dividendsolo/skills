@@ -101,6 +101,12 @@ Rules:
 
 ## Writing / updating
 
+Write back when you finish a unit of work that is implemented, verified, and
+accepted — not mid-task and not speculatively. Record durable knowledge: a
+non-obvious flow, a gotcha, a standard, a decision, or a corrected link. This is
+the write half of the self-healing loop; the repo's `AGENTS.md` carries the
+read-first/write-after instruction (managed by `init-vault.sh`).
+
 1. Create or edit the `.md` note in the right category folder.
 2. Add or update its link in `_index.md` under `## Notes`.
 3. Set `updated:` to today.
