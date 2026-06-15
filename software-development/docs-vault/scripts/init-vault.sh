@@ -5,7 +5,10 @@
 set -euo pipefail
 
 ROOT="${1:-$(pwd)}"
-VAULT="$ROOT/docs/vault"
+repo_name="$(basename "$ROOT")"
+# Folder is named "<repo>-vault" so Obsidian shows the repo name in its vault
+# picker / title bar instead of a generic "vault".
+VAULT="$ROOT/docs/${repo_name}-vault"
 
 mkdir -p \
   "$VAULT/architecture" \
@@ -31,7 +34,6 @@ fi
 
 INDEX="$VAULT/_index.md"
 if [ ! -e "$INDEX" ]; then
-  repo_name="$(basename "$ROOT")"
   cat > "$INDEX" <<EOF
 ---
 title: $repo_name knowledge base

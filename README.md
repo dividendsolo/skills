@@ -30,8 +30,9 @@ pre-existing real (non-symlink) skill directory is left untouched, never clobber
 ## Skills
 
 - **software-development/docs-vault** — read and write a per-repo, in-repo
-  Obsidian knowledge base at `docs/vault/` (architecture, domain, how-it-works,
-  standards, decisions, gotchas). Git is the sync layer, so the same skill works
+  Obsidian knowledge base at `docs/<repo>-vault/` (architecture, domain,
+  how-it-works, standards, decisions, gotchas). The folder is named after the repo
+  so Obsidian shows the repo name. Git is the sync layer, so the same skill works
   for local Claude Code and remote Hermes. Load it before engineering/reviewing
   to get context; write notes back as you learn.
 

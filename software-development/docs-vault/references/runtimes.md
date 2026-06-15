@@ -1,6 +1,7 @@
 # Runtime notes for docs-vault
 
-The vault root is always `<repo-root>/docs/vault/`. The only per-runtime
+The vault root is always `<repo-root>/docs/<repo-name>-vault/` (the folder is
+named after the repo so Obsidian shows the repo name). The only per-runtime
 difference is how you resolve `<repo-root>` and how you write files reliably.
 
 ## Resolving the repo root
@@ -11,7 +12,7 @@ difference is how you resolve `<repo-root>` and how you write files reliably.
   path on the box. Use that path directly; no mount translation.
 - **Hermes (Mac / `docker` terminal backend):** the repo is exposed via a
   `docker_volumes` bind mount, conventionally `/repos/<name>`. The vault is then
-  `/repos/<name>/docs/vault/`. The container-side path is the ONLY correct path —
+  `/repos/<name>/docs/<name>-vault/`. The container-side path is the ONLY correct path —
   do not guess `/workspace/...` or `/root/...`. If the mount is missing, the
   session needs a fresh start (a Docker restart alone does not create it).
 - **Headless Claude Code:** the repo is a clone; treat its checkout dir as root.
@@ -28,6 +29,6 @@ detail.
 
 ## Syncing (all runtimes)
 
-Git is the sync layer. After writing notes: `git add docs/vault && git commit`.
+Git is the sync layer. After writing notes: `git add docs/<repo>-vault && git commit`.
 Push per the repo's policy. Another runtime sees the notes after it pulls. There
 is no server and no live cross-repo query — the vault is scoped to its own repo.
