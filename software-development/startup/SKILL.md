@@ -1,6 +1,6 @@
 ---
 name: startup
-description: Use when starting a new app or repo, or making an existing repo agent-ready — say "new app", "new repo", "create a project", "bootstrap this repo". Sets up git, AGENTS.md + CLAUDE.md, .gitignore, and a per-repo Obsidian knowledge vault, then offers the pinned default stack.
+description: Use when starting a new app or repo, or making an existing repo agent-ready (say "new app", "new repo", "create a project", "bootstrap this repo"). Sets up git, AGENTS.md + CLAUDE.md, .gitignore, and a per-repo Obsidian knowledge vault, then offers the pinned default stack.
 ---
 
 # startup
@@ -9,7 +9,7 @@ Make a repo agent-ready in one move. Idempotent: safe on a brand-new empty
 directory or to retrofit an existing repo. Lean into running it when the user
 signals a new project; confirm first, then run.
 
-## What it does (meta layer — always, safe, idempotent)
+## What it does (meta layer: always, safe, idempotent)
 
 Run the bundled script from the target repo root:
 
@@ -41,7 +41,7 @@ service, a static site):
 - E2E / browser: Playwright
 - Deploy: Vercel (default); Fly.io for file/SQLite apps
 
-## Stack layer (fresh JS/TS web projects only — confirm before running)
+## Stack layer (fresh JS/TS web projects only; confirm before running)
 
 Only for an EMPTY/new project dir. Never run a project generator in a non-empty
 repo (it can clobber). Skip this entirely when retrofitting an existing repo.
@@ -59,6 +59,12 @@ bunx shadcn@latest init
 Adjust to the pinned stack above. Record the actual chosen stack in the repo's
 `AGENTS.md` Stack line. If the project is not a JS/TS web app, skip the stack
 layer and keep only the meta layer.
+
+Because `biome init` runs here, AFTER the meta layer scaffolded the vault, the
+new `biome.json` will not yet exclude the vault. Re-run the meta layer (or
+`docs-vault/scripts/init-vault.sh`, which is idempotent) once Biome exists so it
+adds `!docs/*-vault` to `biome.json` files.includes. Vault notes are prose, not
+code, and should never be linted or formatted.
 
 ## After running
 

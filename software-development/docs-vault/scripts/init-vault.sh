@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# init-vault.sh — scaffold an in-repo Obsidian knowledge vault at docs/vault/.
+# init-vault.sh: scaffold an in-repo Obsidian knowledge vault at docs/<repo>-vault/.
 # Idempotent: never clobbers existing notes; safe to re-run. Run from a repo root,
 # or pass the repo root as $1.
 set -euo pipefail
@@ -54,6 +54,49 @@ EOF
   fi
 }
 
+# If the repo uses Biome, keep the knowledge vault out of its reach. The vault is
+# prose, not code: a code formatter has no business reshaping notes, and Obsidian's
+# .obsidian state is not source. The vault's own .gitignore already hides .obsidian
+# from git; this excludes the tracked .md notes from linting/formatting too. The
+# glob "!docs/*-vault" matches the "<repo>-vault" naming, so it survives renames.
+# Idempotent; skips silently when there is no Biome config (e.g. a non-JS repo).
+ensure_biome_excludes_vault() {
+  local root="$1"
+  local glob='!docs/*-vault'
+  local cfg=""
+  local f
+  for f in biome.json biome.jsonc; do
+    if [ -f "$root/$f" ]; then cfg="$root/$f"; break; fi
+  done
+  [ -n "$cfg" ] || return 0
+  if grep -q 'docs/\*-vault' "$cfg"; then
+    echo "exists  vault exclusion in $(basename "$cfg")"
+    return 0
+  fi
+  if ! command -v bun >/dev/null 2>&1; then
+    echo "  NOTE: Biome config present but bun not found; add \"$glob\" to files.includes in $(basename "$cfg") manually"
+    return 0
+  fi
+  # Patch via a JSON parse/write (bails on JSONC with comments rather than
+  # corrupting it), then re-apply the project's own Biome formatting.
+  if CFG="$cfg" GLOB="$glob" bun -e '
+    const fs = require("fs");
+    const p = process.env.CFG, glob = process.env.GLOB;
+    let cfg;
+    try { cfg = JSON.parse(fs.readFileSync(p, "utf8")); } catch { process.exit(3); }
+    cfg.files = cfg.files || {};
+    const inc = Array.isArray(cfg.files.includes) ? cfg.files.includes : ["**"];
+    if (!inc.includes(glob)) inc.push(glob);
+    cfg.files.includes = inc;
+    fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\n");
+  ' 2>/dev/null; then
+    bunx @biomejs/biome format --write "$cfg" >/dev/null 2>&1 || true
+    echo "added vault exclusion to $(basename "$cfg")"
+  else
+    echo "  NOTE: could not edit $(basename "$cfg") automatically (comments?); add \"$glob\" to files.includes"
+  fi
+}
+
 mkdir -p \
   "$VAULT/architecture" \
   "$VAULT/domain" \
@@ -85,26 +128,26 @@ tags: [index]
 updated: $(date +%F)
 ---
 
-# $repo_name — knowledge base
+# $repo_name knowledge base
 
 Curated knowledge for this repo. Notes describe the code and link to it; they do
 not copy it. Start here, then follow links.
 
 Read this file first. Code is the source of truth; if a note disagrees with the
-code, the code wins — fix the note.
+code, the code wins (fix the note).
 
 ## Map
 
-- **architecture/** — how subsystems fit together
-- **domain/** — domain model and ubiquitous language
-- **how-it-works/** — walkthroughs of real flows
-- **standards/** — conventions and patterns to follow here
-- **decisions/** — decisions; link out to ../adr/* where they exist
-- **gotchas/** — traps and pitfalls
+- **architecture/**: how subsystems fit together
+- **domain/**: domain model and ubiquitous language
+- **how-it-works/**: walkthroughs of real flows
+- **standards/**: conventions and patterns to follow here
+- **decisions/**: decisions; link out to ../adr/* where they exist
+- **gotchas/**: traps and pitfalls
 
 ## Notes
 
-_(none yet — add links as notes are created)_
+_(none yet; add links as notes are created)_
 EOF
   echo "created $INDEX"
 else
@@ -112,5 +155,6 @@ else
 fi
 
 ensure_agents_block "$ROOT" "$(basename "$VAULT")"
+ensure_biome_excludes_vault "$ROOT"
 
 echo "vault ready at $VAULT"
