@@ -29,6 +29,11 @@ pre-existing real (non-symlink) skill directory is left untouched, never clobber
 
 ## Skills
 
+- **software-development/startup** — make a repo agent-ready in one move: git,
+  AGENTS.md + CLAUDE.md, .gitignore, and a per-repo Obsidian vault, plus the
+  pinned default stack (Bun, Next.js, Supabase, Drizzle, Tailwind+shadcn, Biome,
+  Vitest, Playwright). Idempotent; also retrofits existing repos.
+
 - **software-development/docs-vault** — read and write a per-repo, in-repo
   Obsidian knowledge base at `docs/<repo>-vault/` (architecture, domain,
   how-it-works, standards, decisions, gotchas). The folder is named after the repo
