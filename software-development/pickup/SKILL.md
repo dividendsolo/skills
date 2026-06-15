@@ -95,6 +95,14 @@ Otherwise route by status:
 **No exceptions for the interview paths.** Even if the body looks well-spec'd, run
 the interview; the maintainer needs the structured Q&A, not your read of the body.
 
+**Priority audit (before executing `Ready for Agent` / `Ready for Human`).** A
+fully groomed ticket carries a **priority** (the board's native priority field). If
+it is unset (`No priority`), the ticket skipped triage's final step: do NOT execute
+it. Kick it back, set status `Triage`, post a comment saying the priority is
+missing, and STOP. `triage` owns grooming completeness and assigns the priority
+(default Medium; `bug`/`security` at least High) before the ticket returns to
+`Ready for Agent`.
+
 ## 4. Vertical-slice gate (new tickets only; never re-gate started work)
 Before starting NEW work, confirm the ticket is a TRUE vertical slice:
 

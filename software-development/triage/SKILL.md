@@ -54,8 +54,24 @@ map the canonical names to its strings; nothing else here is tracker-specific.
 - `needs-info`: a `Triage` ticket blocked on the reporter. Stays in `Triage`;
   clears when they reply.
 
-A groomed ticket carries exactly one category label and lands in exactly one
-status. If signals conflict, flag it and ask the maintainer before acting.
+**Priority = urgency, a required field** (the board's native priority, not a
+label). Every groomed ticket carries one. Linear's names and our shorthand:
+
+| Linear | Shorthand | When |
+|---|---|---|
+| Urgent | P0 | drop-everything: broken prod, data loss, a live security hole |
+| High | P1 | `bug` and `security` by default; anything blocking other work |
+| Medium | P2 | the default: features, enhancements, tech-debt |
+| Low | P3 | nice-to-have, no near-term cost |
+
+Default to Medium. A `bug` or `security` ticket is at least High, Urgent if it is
+actively breaking production or losing/leaking data; use judgment beyond that. Set
+a best-guess priority when you CREATE an issue, and make sure it is set by the time
+the ticket leaves `Triage`. On a tracker with no native priority field, carry it as
+a `P0`..`P3` label.
+
+A groomed ticket carries exactly one category label, a priority, and lands in
+exactly one status. If signals conflict, flag it and ask the maintainer before acting.
 
 ## Invocation
 The maintainer invokes `/triage` and describes intent in natural language.
@@ -79,19 +95,19 @@ Show counts and a one-line summary per ticket. Let the maintainer pick.
    the codebase via the repo's knowledge vault (start at `docs/<repo>-vault/_index.md`
    if present) and the domain glossary, respecting ADRs in the area. Read
    `.out-of-scope/*.md` and surface any prior rejection that resembles this ticket.
-2. **Recommend.** State your category + target-status recommendation with
-   reasoning, plus a brief relevant codebase summary. Wait for direction.
+2. **Recommend.** State your category + priority + target-status recommendation
+   with reasoning, plus a brief relevant codebase summary. Wait for direction.
 3. **Reproduce (bugs only).** Before any grilling, attempt reproduction: read the
    steps, trace the code, run tests/commands. Report the result: successful repro
    with code path, failed repro, or insufficient detail (a strong `needs-info`
    signal). A confirmed repro makes a much stronger brief.
 4. **Grill (if needed).** If the ticket needs fleshing out, run `/grill-with-docs`.
 5. **Apply the outcome:**
-   - `Ready for Agent`: post an agent brief (`references/agent-brief.md`), set
-     status `Ready for Agent`.
+   - `Ready for Agent`: post an agent brief (`references/agent-brief.md`), set the
+     priority (required; see the priority table), and set status `Ready for Agent`.
    - `Ready for Human`: same brief structure, plus why it can't be delegated
-     (judgment calls, external access, design decisions, manual testing); set
-     status `Ready for Human`.
+     (judgment calls, external access, design decisions, manual testing); set the
+     priority and status `Ready for Human`.
    - `needs-info`: add the label, post triage notes (template below), keep status
      `Triage`.
    - `Won't Fix` (bug): polite explanation, then close.
