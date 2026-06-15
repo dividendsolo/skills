@@ -56,7 +56,12 @@ Gather the project's eligible issues. Ready means the board's `readyStatus`
    new work; the context is freshest and it clears the board cheapest.
 3. **Ready for Agent:** fresh work, only if (1) and (2) are empty.
 
-Within a group: higher priority first, then older `createdAt`. **Skip** a ticket
+Within a group, order by the board's **native priority field** highest-first
+(`Urgent` > `High` > `Medium` > `Low`, with `No priority` last), then by older
+`createdAt` as the tie-break. So a `High` ticket is picked before a `Medium` one in
+the same group regardless of age, and equal-priority tickets go oldest-first. (A
+`Ready for Agent` ticket with `No priority` should have been kicked back by the
+priority audit below; if you still see one, it sorts last.) **Skip** a ticket
 whose blockers are not all Done. **Skip** any ticket carrying a `Needs Triage` /
 parked marker (it is for a human). In Progress / In Review cards that are **not
 mine** belong to other agents; do not touch them. Scope filter: if `afk.json`
