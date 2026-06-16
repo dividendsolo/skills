@@ -9,9 +9,9 @@
 # The repo path is resolved here (git toplevel), so the same command works anywhere.
 #
 # Usage:
+#   bash init-afk.sh --linear-project PROJECT               # linear (default); team defaults to Engineering
 #   bash init-afk.sh --tracker linear --linear-team TEAM --linear-project PROJECT
-#   bash init-afk.sh --tracker github [--gh-project NAME]   # owner/repo from origin
-#   bash init-afk.sh                                        # infer github from origin
+#   bash init-afk.sh --tracker github [--gh-project NAME]   # owner/repo from origin (opt-in)
 # Options (defaults match the shared status vocabulary):
 #   --root DIR         repo root (default: git toplevel of the current directory)
 #   --ready STR        ready-for-agent status   (default "Ready for Agent")
@@ -49,15 +49,16 @@ if printf '%s' "$ORIGIN" | grep -qi 'github\.com'; then
   GH_SLUG="$(printf '%s' "$ORIGIN" | sed -E 's#^.*github\.com[:/]+##; s#\.git$##; s#/$##')"
 fi
 
-# Default the tracker to github when an origin makes that unambiguous.
-if [ -z "$TRACKER" ]; then
-  if [ -n "$GH_SLUG" ]; then TRACKER="github"; else
-    echo "could not infer a tracker (no github origin). Re-run with --tracker linear --linear-team TEAM --linear-project PROJECT" >&2
-    exit 1
-  fi
+# Default the tracker to linear (the standard). GitHub is opt-in via --tracker github.
+if [ -z "$TRACKER" ]; then TRACKER="linear"; fi
+# Linear is the default; default its team to Engineering when not given.
+if [ "$TRACKER" = "linear" ] && [ -z "$LINEAR_TEAM" ]; then LINEAR_TEAM="Engineering"; fi
+if [ "$TRACKER" = "linear" ] && [ -z "$LINEAR_PROJECT" ]; then
+  echo "linear tracker needs --linear-project (team defaults to Engineering). Pass --linear-project PROJECT, or --tracker github to use the GitHub origin." >&2
+  exit 1
 fi
-if [ "$TRACKER" = "linear" ] && { [ -z "$LINEAR_TEAM" ] || [ -z "$LINEAR_PROJECT" ]; }; then
-  echo "linear tracker needs --linear-team and --linear-project" >&2; exit 1
+if [ "$TRACKER" = "github" ] && [ -z "$GH_SLUG" ]; then
+  echo "github tracker needs a github origin remote (none found)" >&2; exit 1
 fi
 
 CFG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"

@@ -85,12 +85,13 @@ else
 fi
 
 # 6. AFK board registry entry (delegates to the afk-setup skill's generator).
-#    Best-effort: it auto-registers a GitHub board inferred from the origin remote.
-#    A Linear board cannot be inferred, so register it later with /afk-setup.
+#    The default tracker is Linear (team Engineering), whose project cannot be
+#    inferred, so a fresh repo is NOT auto-registered here. Finish it with
+#    /afk-setup (pass --linear-project), or pass --tracker github for a GitHub board.
 AFK_INIT="$SCRIPT_DIR/../../afk-setup/scripts/init-afk.sh"
 if [ -f "$AFK_INIT" ]; then
   bash "$AFK_INIT" --root "$ROOT" 2>/dev/null \
-    || echo "afk: no board registered yet (run /afk-setup once the board exists)"
+    || echo "afk: not registered yet (Linear is the default and needs a project; run /afk-setup --linear-project NAME, or use --tracker github)"
 else
   echo "WARN: afk-setup init-afk.sh not found at $AFK_INIT; skipping afk registry" >&2
 fi

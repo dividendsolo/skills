@@ -24,9 +24,11 @@ It ensures, without ever clobbering existing file contents:
 4. `.gitignore` defaults
 5. the Obsidian knowledge vault via the `docs-vault` skill (creates
    `docs/<repo>-vault/` and the read-first/write-after block in `AGENTS.md`)
-6. an AFK board registry entry via the `afk-setup` skill (best-effort: registers a
-   GitHub board inferred from the origin remote; a Linear board is set up later
-   with `/afk-setup`)
+6. an AFK board registry entry via the `afk-setup` skill. The default tracker is
+   **Linear** (team `Engineering`); since the Linear project cannot be inferred, a
+   fresh repo is not auto-registered. Finish it via `/afk-setup` (determine the
+   project with the maintainer, reusing or creating one via the Linear MCP), or
+   pass `--tracker github` for a GitHub board
 
 ## Default stack (pinned; edit HERE to pivot for all future repos)
 

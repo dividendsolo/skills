@@ -40,19 +40,20 @@ entry: you generate it there.
 Run the bundled script from the repo root (it resolves the path itself):
 
 ```bash
-# Linear board (team + project required, cannot be inferred):
+# Linear board (the DEFAULT). Team defaults to "Engineering"; only the project
+# is required (it cannot be inferred):
+bash <path-to-this-skill>/scripts/init-afk.sh --linear-project "Skills"
+
+# Linear with a non-default team:
 bash <path-to-this-skill>/scripts/init-afk.sh \
-  --tracker linear --linear-team "Engineering" \
+  --tracker linear --linear-team "Design" \
   --linear-project "Docket phase 1: ingest, feed, reader"
 
-# GitHub board (owner/repo inferred from the origin remote):
+# GitHub board (opt-in; owner/repo inferred from the origin remote):
 bash <path-to-this-skill>/scripts/init-afk.sh --tracker github
-
-# No flags: infer github from the origin remote, else it tells you what to pass.
-bash <path-to-this-skill>/scripts/init-afk.sh
 ```
 
-Defaults: `--ready "Ready for Agent"`, `--human "Ready for Human"`, `--ship pr`.
+Defaults: `--tracker linear`, `--linear-team "Engineering"`, `--ready "Ready for Agent"`, `--human "Ready for Human"`, `--ship pr`.
 The script is **idempotent**: an existing entry is left untouched unless `--force`.
 It edits the JSON with `node` (or `bun`), preserving every other repo's entry.
 
@@ -60,17 +61,21 @@ It edits the JSON with `node` (or `bun`), preserving every other repo's entry.
 When the maintainer runs `/afk-setup`, do the figuring-out, then call the script:
 1. **Resolve the repo** (`git rev-parse --show-toplevel`). If it already has an
    entry, show it and stop unless they want to change it (`--force`).
-2. **Determine the tracker.** If the origin remote is GitHub and they want GitHub
-   issues/Projects, that is inferable. If it is a Linear board, you need the team
-   and project: list them with the Linear MCP (`list_teams`, `list_projects`) and
-   confirm with the maintainer, or just ask. Do not guess a Linear team/project.
+2. **Determine the tracker. Linear is the default** (team defaults to
+   `Engineering`); use GitHub only when the maintainer explicitly wants GitHub
+   issues/Projects. For Linear you still need a project (it cannot be inferred):
+   list projects with the Linear MCP (`list_projects` for the team), then reuse an
+   existing one or create a new project, and confirm with the maintainer. Do not
+   guess a Linear project.
 3. **Confirm** the values (tracker, coordinates, statuses, ship mode), then run
    `init-afk.sh` with the resolved flags.
 4. Read the file back and show the maintainer the entry you wrote.
 
 ## Pairs with
 - `startup` calls this in its meta layer, so a new repo is registered as it is
-  created (best-effort: it auto-registers a GitHub board from the origin remote; a
-  Linear board is set up by running `/afk-setup` once the board exists).
+  created. The default is a Linear board (team `Engineering`); since the Linear
+  project cannot be inferred, startup does not auto-register it. Finish it by
+  running `/afk-setup` (determine the project, reusing or creating one via the
+  Linear MCP). GitHub is used only when explicitly chosen (`--tracker github`).
 - `pickup` / `triage` / `reviewer-pickup` read the entry this writes; if they find
   none, they point the user here.
