@@ -73,3 +73,20 @@ code, and should never be linted or formatted.
 
 Tell the user what was created and what is left (write the AGENTS.md description,
 fill Commands, run the stack layer if it is a fresh web app).
+
+## Stay lean from day one (the `make-money` lens)
+
+A brand-new repo has zero signups and zero paying users — which is exactly the
+scope of the **`make-money`** skill. Carry its lens from the first commit so the
+project stays lean, cheap, and revenue-focused instead of accreting infra and
+features nobody pays for.
+
+- **Explicitly surface it:** after bootstrapping, tell the user that
+  `/make-money` is the reality check for this stage, and that everything added
+  should earn its keep toward the first paying user.
+- **Apply it pre-emptively:** before agreeing to build infra, background jobs,
+  extra services, or "nice to have" features, ask the `make-money` question —
+  *does this move us toward the first paying customer, or is it gold-plating?*
+  Default to the leanest thing that ships.
+- This keeps the make-money context present from the start, not bolted on after
+  months of building something that doesn't convert.
