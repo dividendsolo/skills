@@ -76,6 +76,13 @@ code, and should never be linted or formatted.
 Tell the user what was created and what is left (write the AGENTS.md description,
 fill Commands, run the stack layer if it is a fresh web app).
 
+Then instantiate the standard checklist: pick the repo profile with the user
+(web-app, service, cli-tool, bot, or content) and use the `repo-standard` skill's
+"Generate the checklist" step to write `docs/repo-standard.md`, stamped with the
+current standard version and profile, with the items startup just satisfied
+marked done. The `repo-standard` skill is the verify side of this flow: run
+`/repo-standard` any time to confirm the repo is still in sync.
+
 ## Pressure-test scope to make money (optional, the `make-money` lens)
 
 Not every repo is a commercial product. Some are just tools, internal
