@@ -19,7 +19,7 @@ a one-line reason. If "Standard" above is behind the skill's current version, ru
 - [ ] C6 No committed secrets
 - [ ] C7 .env.example present if env vars are used
 - [ ] C8 docs/repo-standard.md present and stamped
-- [ ] C9 CONTEXT.md glossary (N/A for pure tools)
+- [ ] C9 CONTEXT.md glossary with grill-with-docs provenance (N/A for pure tools)
 
 ## Profile: {{PROFILE}}
 

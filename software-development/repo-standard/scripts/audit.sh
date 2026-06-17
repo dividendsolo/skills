@@ -105,8 +105,20 @@ else
   say NA "C7 no env var usage detected"
 fi
 # C8 handled above
-say JUDGE "C9 CONTEXT.md glossary (present? domain non-trivial?)"
-[ -f CONTEXT.md ] || [ -f CONTEXT-MAP.md ] && say INFO "C9 CONTEXT.md exists"
+# C9 glossary present, grilled, and domain-appropriate
+if [ -f CONTEXT.md ] || [ -f CONTEXT-MAP.md ]; then
+  c9_file="CONTEXT.md"; [ -f CONTEXT.md ] || c9_file="CONTEXT-MAP.md"
+  say INFO "C9 $c9_file exists"
+  # Provenance: a grilled glossary records that grill-with-docs produced it
+  if grep -qi 'grill-with-docs' "$c9_file" 2>/dev/null; then
+    say PASS "C9 grill-with-docs provenance recorded in $c9_file"
+  else
+    say FAIL "C9 $c9_file has no grill-with-docs provenance marker (run /grill-with-docs, or stamp it if already grilled)"
+  fi
+  say JUDGE "C9 glossary terms reflect the domain (read it)"
+else
+  say JUDGE "C9 no CONTEXT.md (N/A for a pure tool, else run /grill-with-docs)"
+fi
 
 # --- profile add-ons ---
 case "$profile" in

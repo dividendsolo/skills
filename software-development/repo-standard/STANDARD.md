@@ -1,6 +1,6 @@
 # Repo Standard
 
-Version: 2
+Version: 3
 
 The canonical list of what a repo must have to be "to standard". The `startup`
 skill applies these; the `repo-standard` skill verifies them. Every repo meets
@@ -51,8 +51,13 @@ reason). Counts toward "complete" only when every applicable item is done.
   check: docs/repo-standard.md exists with a parseable "Standard: vN" line.
   fix: run /startup, or /repo-standard to generate it.
 - C9 CONTEXT.md glossary, once the domain is non-trivial (N/A for pure tools).
-  check: CONTEXT.md or CONTEXT-MAP.md exists, else N/A with reason.
-  fix: run /grill-with-docs.
+  The glossary is the output of a grill-with-docs session, so it records that
+  provenance: this proves a grill happened rather than the glossary being
+  hand-written or agent-invented, and lets the audit confirm it.
+  check: CONTEXT.md or CONTEXT-MAP.md exists and mentions "grill-with-docs" as its
+  provenance, else N/A with reason.
+  fix: run /grill-with-docs (it stamps the marker); if already grilled, add the
+  marker, e.g. an HTML comment naming grill-with-docs.
 
 ## Profile add-ons
 
