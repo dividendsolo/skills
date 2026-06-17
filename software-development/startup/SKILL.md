@@ -1,6 +1,6 @@
 ---
 name: startup
-description: Use when starting a new app or repo, or making an existing repo agent-ready (say "new app", "new repo", "create a project", "bootstrap this repo"). Sets up git, AGENTS.md + CLAUDE.md, .gitignore, and a per-repo Obsidian knowledge vault, then offers the pinned default stack.
+description: Use when starting a new app or repo, or making an existing repo agent-ready (say "new app", "new repo", "create a project", "bootstrap this repo"). Sets up git, AGENTS.md + CLAUDE.md, .gitignore, and a per-repo Obsidian knowledge vault, offers the pinned default stack, then optionally pressure-tests scope (make-money) and locks in the domain language (grill-with-docs).
 ---
 
 # startup
@@ -76,19 +76,46 @@ code, and should never be linted or formatted.
 Tell the user what was created and what is left (write the AGENTS.md description,
 fill Commands, run the stack layer if it is a fresh web app).
 
-## Stay lean from day one (the `make-money` lens)
+## Pressure-test scope to make money (optional, the `make-money` lens)
 
-A brand-new repo has zero signups and zero paying users — which is exactly the
-scope of the **`make-money`** skill. Carry its lens from the first commit so the
-project stays lean, cheap, and revenue-focused instead of accreting infra and
-features nobody pays for.
+Not every repo is a commercial product. Some are just tools, internal
+utilities, or non-commercial apps. So make this a prompt, not an automatic step:
 
-- **Explicitly surface it:** after bootstrapping, tell the user that
-  `/make-money` is the reality check for this stage, and that everything added
-  should earn its keep toward the first paying user.
-- **Apply it pre-emptively:** before agreeing to build infra, background jobs,
-  extra services, or "nice to have" features, ask the `make-money` question —
-  *does this move us toward the first paying customer, or is it gold-plating?*
-  Default to the leanest thing that ships.
-- This keeps the make-money context present from the start, not bolted on after
-  months of building something that doesn't convert.
+> Ask: "Is this meant to make money, or is it just a tool? Want to run
+> `/make-money` now to pressure-test scope toward the first paying user?"
+
+Skip it for throwaway tools and anything not chasing revenue. If it is a
+money-making web app and the user says yes:
+
+- **Surface it:** `/make-money` is the reality check for a zero-signup,
+  zero-revenue repo. Everything added should earn its keep toward the first
+  paying user.
+- **Apply it pre-emptively:** before building infra, background jobs, extra
+  services, or "nice to have" features, ask the `make-money` question: does this
+  move us toward the first paying customer, or is it gold-plating? Default to the
+  leanest thing that ships.
+
+Run this before the grill-with-docs step so the lens is active while you decide
+what the app is.
+
+## Lock in the shared language (the `grill-with-docs` step)
+
+Final step. Once the repo is scaffolded, offer to run `/grill-with-docs` to nail
+down what the app is going to be and capture its ubiquitous language, so every
+future conversation about the repo is clear, consistent, and understood.
+
+> Offer: "Want to run `/grill-with-docs` now to lock in the domain language, or
+> later?" It is a long, interactive, one-question-at-a-time session, so let the
+> user choose now vs later instead of launching it unprompted.
+
+When run, it interviews the user, sharpens fuzzy terms, and writes the results
+inline:
+
+- **`CONTEXT.md`** at the repo root: the glossary and nothing else (no
+  implementation details). This is the saved shared language that future
+  sessions read first.
+- **`docs/adr/`**: an ADR only when a decision is hard to reverse, surprising
+  without context, and the result of a real trade-off.
+
+This pairs with the vault from the meta layer: the vault holds durable
+how-it-works knowledge, `CONTEXT.md` holds the canonical vocabulary.
