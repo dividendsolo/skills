@@ -98,8 +98,20 @@ or just point the user at another command:
    (web-app, service, cli-tool, bot, or content) and use the `repo-standard`
    skill's "Generate the checklist" step to write `docs/repo-standard.md`,
    stamped with the current standard version and profile, items startup satisfied
-   marked done. `repo-standard` is the verify side of this flow: run
-   `/repo-standard` any time to confirm the repo is still in sync.
+   marked done.
+
+4. **Register the new vault in Obsidian** (where Obsidian is installed; skip on a
+   headless box). The freshly created vault is not in Obsidian's registry yet, so
+   repo-standard's C3 reports it "not opened yet." Add it to `obsidian.json`
+   (`~/Library/Application Support/obsidian` on macOS, `~/.config/obsidian` on
+   Linux) as a new entry: a 16-hex id, the vault's real path, a `ts`. **Only do
+   this when Obsidian is not running** (`pgrep -x Obsidian`): a running Obsidian
+   rewrites the registry from memory on quit and would drop a hand-added entry, so
+   if it is running, prompt the user to open the folder as a vault instead.
+
+5. **Verify.** Run `/repo-standard` and present the results table. With the vault
+   registered, C3 passes end to end. `repo-standard` is the verify side of this
+   flow: run it any time to confirm the repo is still in sync.
 
 ## Pressure-test scope to make money (optional, the `make-money` lens)
 
