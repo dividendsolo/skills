@@ -43,6 +43,12 @@ bun run build
 - TDD: failing test first for behavior changes; colocated \`*.test.ts(x)\`.
 - Named exports; server components by default.
 - No em dashes in any copy, ever.
+
+## Integration
+
+A Claude session working interactively with the maintainer commits straight to
+\`main\` and pushes. Remote agents that pick work off the AFK board branch, open a
+PR, and let a senior reviewer agent merge or kick it back (CI green before merge).
 EOF
   echo "created AGENTS.md"
 else

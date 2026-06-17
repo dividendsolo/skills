@@ -73,15 +73,33 @@ code, and should never be linted or formatted.
 
 ## After running
 
-Tell the user what was created and what is left (write the AGENTS.md description,
-fill Commands, run the stack layer if it is a fresh web app).
+The script scaffolds structure but stops where it needs human knowledge or a
+choice it cannot infer. Close those interactively now, do not leave them as TODOs
+or just point the user at another command:
 
-Then instantiate the standard checklist: pick the repo profile with the user
-(web-app, service, cli-tool, bot, or content) and use the `repo-standard` skill's
-"Generate the checklist" step to write `docs/repo-standard.md`, stamped with the
-current standard version and profile, with the items startup just satisfied
-marked done. The `repo-standard` skill is the verify side of this flow: run
-`/repo-standard` any time to confirm the repo is still in sync.
+1. **Fill AGENTS.md.**
+   - **Commands:** if a `package.json` (or Makefile/justfile/etc.) exists, read
+     its scripts and replace the template Commands block with the repo's real
+     ones, including domain commands (e.g. `db:migrate`, `ingest`), not just the
+     defaults. This is inferable, so do it without asking.
+   - **Description and Stack:** ask the user for the one-line description, but
+     propose a draft from the README/code first so they can confirm or tweak in
+     one reply. Fix the Stack line if the repo diverges from the default stack.
+   - For a fresh JS/TS web app only, run the stack layer (above) after confirming.
+
+2. **Register the AFK board interactively.** The script leaves afk unregistered
+   because the tracker target cannot be inferred; resolve it with the user now.
+   The default tracker is Linear: list existing Linear projects (Linear MCP
+   `list_projects`) and ask the user to pick one or name a new one to create (or
+   use `--tracker github` if they prefer a GitHub board). Then run the
+   `afk-setup` script with the chosen project so `~/.claude/afk.json` is updated.
+
+3. **Instantiate the standard checklist.** Pick the repo profile with the user
+   (web-app, service, cli-tool, bot, or content) and use the `repo-standard`
+   skill's "Generate the checklist" step to write `docs/repo-standard.md`,
+   stamped with the current standard version and profile, items startup satisfied
+   marked done. `repo-standard` is the verify side of this flow: run
+   `/repo-standard` any time to confirm the repo is still in sync.
 
 ## Pressure-test scope to make money (optional, the `make-money` lens)
 
