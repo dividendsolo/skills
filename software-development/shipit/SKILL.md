@@ -1,6 +1,6 @@
 ---
 name: shipit
-description: Ship the current work — run the validation pipeline plus the tests relevant to the changed files, then commit and push. Use only when the user explicitly invokes /shipit. Never auto-ship.
+description: Ship the current work. If the branch has an open PR (e.g. from a manual /pickup), merge it once CI is green; otherwise run the validation pipeline plus the tests relevant to the changed files, then commit and push. Use only when the user explicitly invokes /shipit. Never auto-ship.
 ---
 
 # Shipit
@@ -8,7 +8,40 @@ description: Ship the current work — run the validation pipeline plus the test
 Ship the current changes. Only run when the user explicitly invokes `/shipit`.
 Never start this process proactively.
 
-## Workflow
+## Two modes
+
+`/shipit` ships whatever the current work is. First detect which case you are in:
+
+- **PR-merge mode** — the current branch is NOT the default branch and has an
+  open PR (typically from a `/pickup` the user ran manually). Here the user's
+  `/shipit` is their human sign-off: **merge the PR** once CI is green (Step 0).
+  `/pickup` deliberately stops at In Review for a separate reviewer; but when the
+  user personally picked up the ticket and says ship it, that review gate is
+  satisfied by them, so merging is authorized.
+- **Direct-to-main mode** — the default: uncommitted/unpushed work on the default
+  branch. Validate, run the relevant tests, commit, and push (Steps 1-4).
+
+### Step 0 — PR-merge mode (only when the branch has an open PR)
+
+Detect with `gh pr view --json number,state,headRefName,mergeable,mergeStateStatus`
+on the current branch. If there is an OPEN PR for it, this is the whole job:
+
+1. **Require green CI on the head SHA.** `gh pr checks <n>` — every required
+   check must be `pass` and the PR `mergeable` / `mergeStateStatus: CLEAN`. If CI
+   is still pending, wait for it (`gh run watch`); if anything is failing or the
+   PR conflicts, STOP and report — do not merge.
+2. **Merge the way the repo merges** (match its history; squash is the common
+   default): `gh pr merge <n> --squash --delete-branch`.
+3. **Sync and close out.** `git checkout <default> && git pull`, delete the local
+   feature branch. If the tracker did not auto-advance the ticket on merge, set it
+   to **Done** (the GitHub↔Linear/Projects integration usually does this for you).
+4. **Report** the merge commit SHA and that the PR + ticket are shipped. Then
+   STOP — skip Steps 1-4. The PR's green CI is the gate; there is nothing
+   uncommitted to validate and nothing to commit to `main`.
+
+Only fall through to Steps 1-4 below when there is **no** open PR for the branch.
+
+## Workflow (direct-to-main mode)
 
 ### Step 1 — Validate
 
