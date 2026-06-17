@@ -1,6 +1,6 @@
 # Repo Standard
 
-Version: 1
+Version: 2
 
 The canonical list of what a repo must have to be "to standard". The `startup`
 skill applies these; the `repo-standard` skill verifies them. Every repo meets
@@ -27,8 +27,14 @@ reason). Counts toward "complete" only when every applicable item is done.
   check: grep `@AGENTS.md` CLAUDE.md.
   fix: create CLAUDE.md containing the single line `@AGENTS.md`.
 - C3 Knowledge vault docs/<repo>-vault/ with _index.md, plus the vault block in AGENTS.md.
-  check: a docs/*-vault directory with _index.md exists.
-  fix: run the docs-vault skill (startup does this).
+  Where Obsidian is installed, its registry must point at the vault's real path:
+  a moved/renamed repo leaves a stale entry and the vault fails to open.
+  check: a docs/*-vault directory with _index.md exists; AGENTS.md has the
+  "## Knowledge vault" block; and if obsidian.json is present, no same-named vault
+  is registered at a path that no longer exists.
+  fix: run the docs-vault skill (startup does this); repoint the stale path in
+  obsidian.json (~/Library/Application Support/obsidian on macOS,
+  ~/.config/obsidian on Linux), or reopen the folder as a vault in Obsidian.
 - C4 .gitignore present.
   check: .gitignore exists.
   fix: add .gitignore (startup does this).
@@ -52,27 +58,34 @@ reason). Counts toward "complete" only when every applicable item is done.
 
 ### web-app, service, cli-tool (engineering and CI)
 
-- E1 Lint and format config (Biome).
-  check: biome.json exists.
-  fix: bunx @biomejs/biome init.
+The audit only confirms these are present and configured. It never executes the
+validation pipeline (typecheck, lint, test, build) or any other heavy command.
+Running them is CI's job; the audit just checks the repo is wired up to run them.
+
+- E1 Lint and format config (Biome), with the knowledge vault excluded.
+  check: biome.json exists; and if a docs/*-vault exists, files.includes contains
+  "!docs/*-vault" so the vault prose is never linted or formatted.
+  fix: bunx @biomejs/biome init; the docs-vault skill adds the vault exclusion.
 - E2 Typecheck (tsc strict) with a typecheck script.
   check: tsconfig has strict true and package.json has a typecheck script.
   fix: enable strict, add "typecheck": "tsc --noEmit".
 - E3 Test runner (Vitest) plus at least one test.
   check: a vitest config or dep exists and at least one *.test.* or *.spec.* file exists.
   fix: add vitest and a smoke test.
-- E4 Validation pipeline in AGENTS Commands, runs green.
-  check: AGENTS.md Commands lists typecheck, lint, test, build.
-  fix: document the pipeline in AGENTS.md and make it pass.
+- E4 Validation commands documented in AGENTS Commands.
+  check: AGENTS.md Commands lists typecheck, lint, test, build (presence only).
+  fix: document the commands in AGENTS.md. The audit never runs them; CI does.
 - E5 docs/adr/ for non-trivial decisions.
   check: docs/adr exists, else N/A with reason.
   fix: add docs/adr and record the first decision.
-- CI1 CI runs the validation pipeline on pushes or PRs.
-  check: a .github/workflows/*.yml (or equivalent) exists. [v1: flagged, fix by hand]
-  fix: add a CI workflow that runs the validation pipeline.
-- CI2 Integration mode declared and consistently followed.
-  check: AGENTS.md states the mode (straight-to-main or branch+PR). [v1: flagged, judge]
-  fix: state the mode in AGENTS.md; the toggle lives in the shipit skill, not here.
+- CI1 CI workflow file exists.
+  check: a .github/workflows/*.yml (or equivalent) is present. The audit confirms
+  the file exists; it does not run CI.
+  fix: add a CI workflow that runs the validation pipeline on pushes or PRs.
+- CI2 Git workflow documented in AGENTS.md.
+  check: AGENTS.md states the integration mode (straight-to-main, or branch + PR +
+  merge after CI is green). [judge]
+  fix: state the mode in AGENTS.md; the shipit skill toggle enforces it, not this.
 
 ### bot
 

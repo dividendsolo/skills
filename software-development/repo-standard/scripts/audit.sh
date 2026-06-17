@@ -40,7 +40,45 @@ greps() { grep -qE "$1" "$2" 2>/dev/null; }
 # --- CORE ---
 ck C1 "AGENTS.md with Commands" bash -c '[ -f AGENTS.md ] && grep -qE "^##+ +Commands" AGENTS.md'
 ck C2 "CLAUDE.md contains @AGENTS.md" bash -c 'grep -q "@AGENTS.md" CLAUDE.md 2>/dev/null'
-ck C3 "vault with _index.md" bash -c 'ls -d docs/*-vault/_index.md >/dev/null 2>&1'
+# C3 vault with _index.md, plus its path in Obsidian's registry must be current
+c3_idx="$(ls -d docs/*-vault/_index.md 2>/dev/null | head -1)"
+if [ -z "$c3_idx" ]; then
+  say FAIL "C3 vault with _index.md missing (run docs-vault skill)"
+else
+  say PASS "C3 vault with _index.md"
+  # C3 read-first/write-after vault block in AGENTS.md (docs-vault adds it)
+  if grep -qE '^#{2,} +Knowledge vault' AGENTS.md 2>/dev/null; then
+    say PASS "C3 AGENTS.md vault block present"
+  else
+    say FAIL "C3 AGENTS.md vault block missing (run docs-vault skill)"
+  fi
+  # Locate Obsidian's vault registry across platforms (absent on a VPS/CI box)
+  c3_obs=""
+  for c3_cand in \
+    "$HOME/Library/Application Support/obsidian/obsidian.json" \
+    "$HOME/.config/obsidian/obsidian.json" \
+    "${APPDATA:-}/obsidian/obsidian.json"; do
+    [ -f "$c3_cand" ] && { c3_obs="$c3_cand"; break; }
+  done
+  c3_dir="$(cd "$(dirname "$c3_idx")" && pwd -P)"
+  c3_base="$(basename "$c3_dir")"
+  if [ -z "$c3_obs" ]; then
+    say INFO "C3 Obsidian not installed here, skipping vault-path check"
+  elif ! command -v jq >/dev/null 2>&1; then
+    say JUDGE "C3 jq unavailable, verify obsidian.json vault path by hand"
+  elif jq -e --arg v "$c3_dir" '[(.vaults // {})[].path] | any(. == $v)' "$c3_obs" >/dev/null 2>&1; then
+    say PASS "C3 Obsidian vault path current ($c3_dir)"
+  else
+    # Same-named vault registered at a path that no longer exists = stale entry
+    c3_stale="$(jq -r --arg b "$c3_base" '[(.vaults // {})[].path] | .[] | select(endswith("/"+$b))' "$c3_obs" 2>/dev/null \
+      | while IFS= read -r c3_p; do [ -e "$c3_p" ] || { printf '%s' "$c3_p"; break; }; done)"
+    if [ -n "$c3_stale" ]; then
+      say FAIL "C3 Obsidian registers $c3_base at stale $c3_stale (actual $c3_dir); fix obsidian.json"
+    else
+      say INFO "C3 vault not registered in Obsidian yet (open folder as vault)"
+    fi
+  fi
+fi
 ck C4 ".gitignore present" has .gitignore
 # C5 afk.json (entries are keyed by absolute repo path; fall back to basename)
 repo_path="$PWD"
@@ -74,12 +112,21 @@ say JUDGE "C9 CONTEXT.md glossary (present? domain non-trivial?)"
 case "$profile" in
   web-app|service|cli-tool)
     ck E1 "biome.json" has biome.json
+    # E1 vault exclusion: when a vault and a Biome config coexist, exclude the vault prose
+    e1_cfg=""; for e1_f in biome.json biome.jsonc; do [ -f "$e1_f" ] && { e1_cfg="$e1_f"; break; }; done
+    if [ -n "$e1_cfg" ] && ls -d docs/*-vault >/dev/null 2>&1; then
+      if grep -q 'docs/\*-vault' "$e1_cfg"; then
+        say PASS "E1 Biome excludes the vault"
+      else
+        say FAIL "E1 Biome does not exclude the vault (add \"!docs/*-vault\" to files.includes)"
+      fi
+    fi
     ck E2 "tsc strict + typecheck script" bash -c 'grep -q "\"strict\": *true" tsconfig*.json 2>/dev/null && grep -q "\"typecheck\"" package.json 2>/dev/null'
     ck E3 "vitest + a test file" bash -c '(ls vitest.config.* >/dev/null 2>&1 || grep -q vitest package.json 2>/dev/null) && (find . -path ./node_modules -prune -o \( -name "*.test.*" -o -name "*.spec.*" \) -print 2>/dev/null | grep -q .)'
-    ck E4 "validation pipeline in AGENTS Commands" bash -c 'grep -qi typecheck AGENTS.md && grep -qi "\blint\b" AGENTS.md && grep -qi "\btest\b" AGENTS.md && grep -qi "\bbuild\b" AGENTS.md'
+    ck E4 "validation commands documented in AGENTS Commands" bash -c 'grep -qi typecheck AGENTS.md && grep -qi "\blint\b" AGENTS.md && grep -qi "\btest\b" AGENTS.md && grep -qi "\bbuild\b" AGENTS.md'
     ck E5 "docs/adr" has docs/adr
-    ck CI1 "CI workflow present" bash -c 'ls .github/workflows/*.y*ml >/dev/null 2>&1'
-    say JUDGE "CI2 integration mode declared in AGENTS.md and followed"
+    ck CI1 "CI workflow file exists" bash -c 'ls .github/workflows/*.y*ml >/dev/null 2>&1'
+    say JUDGE "CI2 git workflow documented in AGENTS.md"
     ;;
   bot)
     ck A1 "LEARNINGS.md" has LEARNINGS.md

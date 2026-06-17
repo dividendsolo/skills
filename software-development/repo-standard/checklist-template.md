@@ -13,7 +13,7 @@ a one-line reason. If "Standard" above is behind the skill's current version, ru
 
 - [ ] C1 AGENTS.md with filled description and Commands
 - [ ] C2 CLAUDE.md contains @AGENTS.md
-- [ ] C3 Vault docs/<repo>-vault with _index.md
+- [ ] C3 Vault docs/<repo>-vault with _index.md + AGENTS.md vault block
 - [ ] C4 .gitignore present
 - [ ] C5 afk.json entry resolves to a board or project
 - [ ] C6 No committed secrets
@@ -27,13 +27,13 @@ a one-line reason. If "Standard" above is behind the skill's current version, ru
 
 ### web-app, service, cli-tool
 
-- [ ] E1 Biome config
+- [ ] E1 Biome config (vault excluded)
 - [ ] E2 tsc strict with typecheck script
 - [ ] E3 Vitest plus a smoke test
-- [ ] E4 Validation pipeline in AGENTS Commands, green
+- [ ] E4 Validation commands documented in AGENTS Commands
 - [ ] E5 docs/adr for non-trivial decisions
-- [ ] CI1 CI runs the validation pipeline
-- [ ] CI2 Integration mode declared and followed
+- [ ] CI1 CI workflow file exists
+- [ ] CI2 Git workflow documented in AGENTS.md
 
 ### bot
 

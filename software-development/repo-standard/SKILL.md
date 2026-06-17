@@ -47,6 +47,9 @@ matches. Mark items already satisfied as done. This is what `startup` calls.
 ## Rules
 
 - Every verdict traces to STANDARD.md, never memory.
+- The audit is presence-and-config only. Never run the validation pipeline
+  (typecheck, lint, test, build) or any heavy command to verify it is "green";
+  that is CI's job. Check that the repo is wired up to run it, not that it passes.
 - Report gaps, do not auto-fix unless the user asks.
 - Counts toward "complete" only when every applicable item is done; N/A needs a
   one-line reason.
