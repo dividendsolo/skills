@@ -17,7 +17,7 @@ a one-line reason. If "Standard" above is behind the skill's current version, ru
 - [x] C4 .gitignore present
 - [x] C5 afk.json entry resolves to a board or project
 - [x] C6 No committed secrets
-- [x] C7 .env.example present if env vars are used — N/A: only reference is `process.env.HOME` (a standard OS var) in one pickup script; no app config to document
+- [x] C7 .env.example present if env vars are used — N/A: the only `process.env` references are internal variables in bundled skill scripts (e.g. afk-setup's `init-afk.sh`: `ROOT`, `TRACKER`, `LINEAR_PROJECT`), not application config or secrets. Content profile; nothing to document. The audit's grep-based C7 flags these as a false positive (reports FAIL, resolved N/A here).
 - [x] C8 docs/repo-standard.md present and stamped
 - [x] C9 CONTEXT.md glossary — N/A: content profile (skill repo); no domain glossary needed
 
