@@ -42,10 +42,11 @@ ck C1 "AGENTS.md with Commands" bash -c '[ -f AGENTS.md ] && grep -qE "^##+ +Com
 ck C2 "CLAUDE.md contains @AGENTS.md" bash -c 'grep -q "@AGENTS.md" CLAUDE.md 2>/dev/null'
 ck C3 "vault with _index.md" bash -c 'ls -d docs/*-vault/_index.md >/dev/null 2>&1'
 ck C4 ".gitignore present" has .gitignore
-# C5 afk.json
+# C5 afk.json (entries are keyed by absolute repo path; fall back to basename)
+repo_path="$PWD"
 repo_name="$(basename "$PWD")"
 if [ -f "$HOME/.claude/afk.json" ] && command -v jq >/dev/null 2>&1; then
-  if jq -e --arg r "$repo_name" '(.repos // .) | (.[$r] // empty)' "$HOME/.claude/afk.json" >/dev/null 2>&1; then
+  if jq -e --arg p "$repo_path" --arg r "$repo_name" '(.repos // .) as $m | ($m[$p] // $m[$r] // empty)' "$HOME/.claude/afk.json" >/dev/null 2>&1; then
     say PASS "C5 afk.json entry present"
   else
     say FAIL "C5 afk.json entry missing (run /afk-setup)"
