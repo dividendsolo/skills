@@ -80,6 +80,10 @@ Before writing any code, look for `LEARNINGS.md` at the repo root.
   you find a lesson worth recording, surface it in your PR description so the
   reviewer can decide.
 
+Also read `docs/repo-standard.md` and run `/repo-standard` before starting. If it
+reports drift or gaps in areas you are about to touch, fix them as part of the
+work or flag them; do not let the repo fall further out of standard.
+
 ## 3. Route by status (the state machine)
 Read the ticket's title, labels, body, any agent-brief comment, and its **board
 status**. Status is the canonical state machine; labels carry *kind-of-work*

@@ -114,6 +114,10 @@ yes, fold it in:
   exception to the no-direct-main rule, since it's reviewer-owned and not part of
   any worker PR). Use the repo's own git identity.
 
+As part of review, run `/repo-standard` on the repo and include any drift or new
+gaps in the review: the PR should not regress the repo's standard checklist
+(`docs/repo-standard.md`), and ideally closes gaps it touches.
+
 ## Trackers (mechanics only; the vocabulary is shared)
 Resolve the tracker and the actual status strings from `afk.json`. The board (where
 status lives) and the code host (where PRs, CI, and merges live) can differ: docket
