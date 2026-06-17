@@ -32,9 +32,25 @@ The verify side of `startup`. The canonical list lives in
    current standard version. Re-evaluate the new items, update
    `docs/repo-standard.md`, and bump its `Standard: vN` and `Last reconciled`.
 
-5. **Report.** One status per item: done, drifted, missing, or N/A with a reason.
-   Lead with the gaps, each with its fix from STANDARD.md. Offer to fix the
-   mechanical ones now; do not edit unless asked.
+5. **Report.** Always end with a single results table so the repo's state is
+   readable at a glance, whether or not it passed. One row per check the audit
+   emitted (fold each resolved JUDGE into its row with the verdict). Columns:
+
+   | Status | ID | Check | Notes |
+   |--------|----|-------|-------|
+   | ✅ pass | C1 | AGENTS.md with Commands | |
+   | ❌ fail | C7 | .env.example present | code reads env vars but no .env.example; fix: add it listing required keys |
+   | ➖ N/A | E5 | docs/adr | pure tool, no non-trivial decisions yet |
+
+   Rules for the table:
+   - Status glyphs: ✅ pass, ❌ fail, ➖ N/A, 🔶 drift. Resolve every JUDGE to ✅
+     or ❌ first (step 3) so no row is left as "judge".
+   - **Every ❌ must say why it failed and the one-line fix** from STANDARD.md.
+   - N/A rows must carry their one-line reason.
+   - Order: failures and drift first, then the rest.
+   Above the table, give a one-line verdict (e.g. "12/12 applicable green" or
+   "2 gaps"). Below it, offer to fix the mechanical failures now; do not edit
+   unless asked.
 
 ## Generate the checklist
 
