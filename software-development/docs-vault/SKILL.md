@@ -99,6 +99,33 @@ Rules:
    - Hermes: `search_files` with `target: "content"` and `file_glob: "*.md"`
      under the vault path.
 
+## What earns an entry
+
+A note earns its place when it captures something **expensive to re-derive from
+the code** and **stable enough not to rot**. That test promotes a few kinds of
+note and demotes one:
+
+- **Flow maps (highest value).** Whenever a real flow spans several files or
+  modules, map it: what calls what, in what order, and why. This is the note that
+  saves the next agent from opening a dozen files to reconstruct the path. Write
+  it at an altitude that survives refactors: name the modules, types, and
+  contracts and the direction data flows, plus the invariants and the seams
+  (where behaviour is chosen or extended). Do NOT make file paths or line numbers
+  the payload; cite them as links, not as the content.
+- **Gotchas and non-obvious constraints**, decisions and their *why*, and the
+  glossary all pass the same test and are worth capturing.
+- **Do NOT** write prose that restates what the code does. The code says it
+  better, and that is exactly the note that rots into a lie.
+
+A wrong map is worse than none, because it sends the reader the wrong way with
+confidence. Two habits keep maps trustworthy:
+
+- Keep them **coarse** (coarse maps drift slowly), and update the map in the
+  **same change** that alters the flow.
+- Capture **demand-driven**: write the map the moment you have just reconstructed
+  a flow the hard way, while it is fresh. Do not pre-map everything speculatively;
+  the speculative notes rot unread.
+
 ## Writing / updating
 
 Write back when you finish a unit of work that is implemented, verified, and
