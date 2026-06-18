@@ -203,10 +203,17 @@ a human check before it can ship. So that the reviewer parks it instead of
 auto-merging:
 - Add the **`Needs Manual QA`** label to the card.
 - Post a board comment titled **`Manual QA required before merge`** (with the AI
-  disclaimer) listing the exact steps James must run or eyeball and why an agent
-  cannot do them, plus the PR's preview-deploy URL if one exists. Keep it concrete;
-  this is the checklist James works from and the text the reviewer puts in its
-  Discord ping.
+  disclaimer). It MUST lead with **where to look**, on its own lines at the very
+  top, so James never has to guess what he is QA-ing:
+  - `**Branch:** <branch-name>`
+  - `**Preview:** <vercel-preview-url>` (the deploy of THIS branch, not prod). Get
+    it from the PR's Vercel comment / `gh pr view`. If no preview exists yet, say
+    so and how to get one (push, or run locally on that branch) rather than
+    leaving it blank, and flag it so previews get fixed.
+  Then list the exact steps James must run or eyeball and why an agent cannot do
+  them. Keep it concrete; this is the checklist James works from and the text the
+  reviewer puts in its Discord ping. The Discord `qa-hold` ping must also name the
+  branch and preview URL.
 When the only thing left on an approved, CI-green PR is this manual QA, the reviewer
 will leave the card parked in `In Review`, NOT merge it, and ping James; James QAs,
 then merges (or asks an agent to). If Manual QA is "none needed", do not add the

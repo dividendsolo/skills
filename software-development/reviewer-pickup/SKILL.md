@@ -114,7 +114,7 @@ One line on Discord, never block the verdict on it:
 `hermes send --to discord:<target> "<message>"`
 - kickback: `🔴 <ID> sent back: <one-line reason>. PR #N`
 - merged (LIVE): `✅ <ID> merged: <title>. PR #N`
-- qa-hold: `🟡 <ID> approved + CI green, parked for your manual QA before merge: <one-line what to check>. PR #N <url>`
+- qa-hold: `🟡 <ID> approved + CI green, parked for your manual QA before merge: <one-line what to check>. Preview: <preview-url> · PR #N` (pull the preview URL from the worker's `Manual QA required before merge` comment / the PR's Vercel comment)
 - approved-holding (SHADOW): `🟢 <ID> approved, holding for you (shadow). PR #N`
 
 ### 5. Stop
