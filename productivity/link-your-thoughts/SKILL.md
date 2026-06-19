@@ -62,6 +62,13 @@ on the Personal / JEG board).
    should actually mean from now on.
 6. Next note.
 
+## Always close with this reminder
+When a note is done (and at the end of a session), remind James that this is a
+portable thinking habit, not a tool-bound chore. The real goal is to run this
+loop in his head: while walking around, away from the keyboard, whenever a thing
+catches his attention. The skill is just training wheels for that mental
+practice. End every note with that nudge so the habit transfers off the screen.
+
 ## Rules
 - One question at a time; never skip ahead or fill in answers for the user.
 - Keep the user's words; do not over-distill or paraphrase away their voice.
