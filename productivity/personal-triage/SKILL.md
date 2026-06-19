@@ -38,8 +38,10 @@ work it hands off (see Apps below) and never edits the dev board itself.
 - `Canceled`: dropped (with a one-line why). `Duplicate`: folded into another card.
 
 **Kind = what sort of thing it is (exactly one label):**
-`App`, `Task`, `Learning`, `Research`, `Errand`, `Admin`.
-`App` means a software project: hand it off to the dev flow, do not groom it here.
+`engineering`, `Task`, `Learning`, `Research`, `Errand`, `Admin`.
+`engineering` means dev work (software, skills, repos, tooling): hand it off to the
+dev flow, do not groom it here. The label does double duty as the routing signal,
+since it maps to the Engineering board it hands off to.
 
 **Priority = native Urgent / High / Medium / Low, default Medium.** Re-read for
 personal life (it will not map exactly, and that is fine): Urgent = a hard
@@ -69,7 +71,7 @@ Show a one-line summary per card and let the user pick which to work.
    - **Ready for Pickup:** write a short brief into the description (What this is /
      Done means / First action), set the kind label and priority, move to
      `Ready for Pickup`.
-   - **App (hand off):** confirm the work is represented on the dev board (run
+   - **engineering (hand off):** confirm the work is represented on the dev board (run
      `/startup` if it needs a new repo/board, otherwise `/triage` on the existing
      one), link the dev board or issue from the personal card, then close the
      personal card (`Canceled`) with a comment pointing across. No permanent
@@ -86,8 +88,8 @@ confirm the change (status, label, comment, close), then apply it. Skip grilling
 ## Definition of groomed
 A card is `Ready for Pickup` when it has: a kind label, a priority, a one-line
 definition of done, and a clear first action. That is the whole bar. A full spec
-is only for Apps, which get one on the dev side via `/startup` + `/grill-with-docs`.
+is only for `engineering` items, which get one on the dev side via `/startup` + `/grill-with-docs`.
 
 ## Pairs with
 - The dev `triage` / `pickup` / `reviewer-pickup` flow, which owns anything
-  labelled `App` once it has been handed off.
+  labelled `engineering` once it has been handed off.
