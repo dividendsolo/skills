@@ -38,10 +38,11 @@ work it hands off (see Apps below) and never edits the dev board itself.
 - `Canceled`: dropped (with a one-line why). `Duplicate`: folded into another card.
 
 **Kind = what sort of thing it is (exactly one label):**
-`engineering`, `Task`, `Learning`, `Research`, `Errand`, `Admin`.
+`engineering`, `Task`, `Learning`, `Research`, `Errand`, `Admin`, `notes`.
 `engineering` means dev work (software, skills, repos, tooling): hand it off to the
 dev flow, do not groom it here. The label does double duty as the routing signal,
-since it maps to the Engineering board it hands off to.
+since it maps to the Engineering board it hands off to. `notes` means zettelkasten
+note work (processing, linking, atomizing); these are run with `/link-your-thoughts`.
 
 **Priority = native Urgent / High / Medium / Low, default Medium.** Re-read for
 personal life (it will not map exactly, and that is fine): Urgent = a hard
