@@ -68,17 +68,27 @@ let James adjust). The atomic notes are what get linked and land in `Processed`.
    in the vault (search by title) and write a real `[[wikilink]]`. If no note
    exists yet, offer to drop a stub or leave it as plain text. A named
    *experience* (not a note) is written inline as a short anecdote.
-5. **Write it back** into the note as a short block, in the user's own words:
+5. **Write it back** into the note under the NOMA headers, James's answers
+   **verbatim** (see the hard rule below). The headers are yours; everything under
+   them is his exact words. The thing he named in "That reminds me" becomes the
+   `[[wikilink]]`:
 
    ```
-   ## Why I singled this out
-   <the why>
+   # <atomic note title>
 
-   ## Connections
-   - Reminds me of [[X]] (similar because ...; different because ...)
-   - Experience: <short anecdote>
+   Source: [[<book / source note>]]. <the highlight, verbatim>
 
-   Why it matters: <...>
+   ## That reminds me
+   <his exact words; the thing he named as [[wikilink]]>
+
+   ## It's similar because
+   <his exact words>
+
+   ## It's different because
+   <his exact words>
+
+   ## It's important because
+   <his exact words>
    ```
 6. **Mark it done.** Once a note has at least one real connection it is genuinely
    processed; move a raw `_inbox` dump into `Processed`. That is what "processed"
@@ -93,8 +103,12 @@ catches his attention. The skill is just training wheels for that mental
 practice. End every note with that nudge so the habit transfers off the screen.
 
 ## Rules
+- **VERBATIM (hard rule, never break this).** Write James's answers into the note
+  exactly as he said them, word for word. Do NOT summarize, paraphrase, condense,
+  tidy, or AI-polish his thoughts. The only edits allowed are fixing a clear typo
+  or grammatical error. These notes must be HIS thoughts, not the model's. If you
+  catch yourself rewording, stop and paste his exact words instead.
 - One question at a time; never skip ahead or fill in answers for the user.
-- Keep the user's words; do not over-distill or paraphrase away their voice.
 - Lean by design: no auto-distilling whole highlight dumps, no MOC restructuring,
   no machine-guessed bulk linking. The user supplies the connection; the skill
   does the legwork of finding the note and writing the link.
