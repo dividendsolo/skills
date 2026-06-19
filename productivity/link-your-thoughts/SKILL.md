@@ -1,6 +1,6 @@
 ---
 name: link-your-thoughts
-description: Interactive reflection coach that walks through Obsidian notes (Kindle highlights, _inbox captures, Processed notes) one at a time, asking a fixed "that reminds me..." question sequence to surface why each was singled out, then writes the answers and real [[wikilinks]] back into the note. Use when the user invokes /link-your-thoughts, says "link your thoughts", "let's link my notes", "process my notes", "do a linking pass", or wants to turn raw highlights into connected permanent notes in the zettelkasten.
+description: Interactive reflection coach that walks through Obsidian notes (Kindle highlights, _inbox captures, Processed notes) one at a time, running the NOMA method (5 prompts: that's interesting, that reminds me, it's similar because, it's different because, it's important because) to surface why each was singled out, then writes the answers and real [[wikilinks]] back into the note. Use when the user invokes /link-your-thoughts, says "link your thoughts", "let's link my notes", "process my notes", "do a linking pass", or wants to turn raw highlights into connected permanent notes in the zettelkasten.
 ---
 
 # Link Your Thoughts
@@ -24,6 +24,17 @@ inert clipping. The questions are the work. The links are just the residue. Say
 this backdrop briefly, in your own framing, before the questions, so each note is
 approached as "why did this survive the noise?"
 
+## The NOMA method (five prompts)
+The structure is the NOMA method, five prompts in order:
+1. **"That's interesting"** (the trigger / frame: this is what survived the noise)
+2. **"That reminds me..."** (the connection it brings to mind)
+3. **"It's similar because..."** (why it connects)
+4. **"It's different because..."** (where it diverges)
+5. **"It's important because..."** (why it matters)
+
+Prompt 1 is the frame you set; prompts 2 to 5 are the questions you actually ask,
+one at a time.
+
 ## Where it works
 The zettelkasten vault at `~/Vaults/zettelkasten` (`_inbox` and `Processed`). One
 note at a time, at the user's pace. Good first targets: the raw Kindle "Lit note"
@@ -43,19 +54,21 @@ let James adjust). The atomic notes are what get linked and land in `Processed`.
 1. **Pick the next unit.** For a Kindle dump the unit is a single highlight turned
    into its own atomic note (see above); otherwise the note itself. Let the user
    choose, else go oldest-first. Show the highlight/passage being worked.
-2. **Set the frame** in a line, then ask the sequence below **one question at a
-   time, waiting for each answer before moving to the next.** Do not answer for
-   the user or guess their reasons. The asking is the point.
-   1. Why did you single this out? What made it interesting?
-   2. That reminds me of... (name a note, an idea, or a lived experience)
-   3. It's similar because...
-   4. It's different because...
-   5. It's important because...
-3. **Forge the links.** For each thing named in step 2.2, find the matching note
+2. **Frame: "That's interesting."** This is the trigger, not a deep question.
+   Mark what James singled out and that it caught his eye: out of all the noise,
+   this is the bit he found interesting. It sets the stage for the prompts.
+3. **Pose the four prompts**, one at a time, waiting for each answer before the
+   next. These are the actual questions; the asking is the work, so never answer
+   for him or guess his reasons:
+   1. "That reminds me..." (what it brings to mind: a note, an idea, or a lived experience)
+   2. "It's similar because..." (why it connects to that thing)
+   3. "It's different because..." (where it diverges or contrasts)
+   4. "It's important because..." (why it matters to him)
+4. **Forge the links.** For each thing James named, find the matching note
    in the vault (search by title) and write a real `[[wikilink]]`. If no note
    exists yet, offer to drop a stub or leave it as plain text. A named
    *experience* (not a note) is written inline as a short anecdote.
-4. **Write it back** into the note as a short block, in the user's own words:
+5. **Write it back** into the note as a short block, in the user's own words:
 
    ```
    ## Why I singled this out
@@ -67,10 +80,10 @@ let James adjust). The atomic notes are what get linked and land in `Processed`.
 
    Why it matters: <...>
    ```
-5. **Mark it done.** Once a note has at least one real connection it is genuinely
+6. **Mark it done.** Once a note has at least one real connection it is genuinely
    processed; move a raw `_inbox` dump into `Processed`. That is what "processed"
    should actually mean from now on.
-6. Next note.
+7. Next note.
 
 ## Always close with this reminder
 When a note is done (and at the end of a session), remind James that this is a
