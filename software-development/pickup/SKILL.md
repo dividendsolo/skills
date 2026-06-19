@@ -215,12 +215,14 @@ auto-merging:
   reviewer puts in its Discord ping. The Discord `qa-hold` ping must also name the
   branch and preview URL.
 - **Linear: also pin the preview as a clickable chip.** In addition to the comment,
-  create a Linear link attachment titled `Preview` on the card (`create_attachment`)
-  pointing at the same branch-alias preview URL, so it renders as a chip at the top
-  of the card and James does not have to open the comment to reach it. Keep exactly
-  one `Preview` attachment per card: on a re-run, update or replace the existing one
-  rather than stacking duplicates. On GitHub or other trackers, skip this; the
-  comment above is enough.
+  add a Linear link attachment titled `Preview` pointing at the same branch-alias
+  preview URL, so it renders as a chip at the top of the card and James does not have
+  to open the comment to reach it. Mechanism: `save_issue` with
+  `links: [{title: "Preview", url}]` (the `create_attachment` tool is for file
+  uploads, NOT this). `links` is append-only, so first read the card's existing
+  attachments (`get_issue`) and only add when there is no `Preview` attachment
+  already, to avoid stacking duplicates on a re-run. On GitHub or other trackers,
+  skip this; the comment above is enough.
 When the only thing left on an approved, CI-green PR is this manual QA, the reviewer
 will leave the card parked in `In Review`, NOT merge it, and ping James; James QAs,
 then merges (or asks an agent to). If Manual QA is "none needed", do not add the
