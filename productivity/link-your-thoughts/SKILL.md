@@ -72,11 +72,10 @@ the `Notes/` folder.
 5. **Write it back** into the note under the NOMA headers, James's answers
    **verbatim** (see the hard rule below). The headers are yours; everything under
    them is his exact words. The thing he named in "That reminds me" becomes the
-   `[[wikilink]]`:
+   `[[wikilink]]`. The note's title is the filename (it is also the link name), so
+   do NOT add an H1 heading repeating it inside the file:
 
    ```
-   # <atomic note title>
-
    Source: [[<book / source note>]]. <the highlight, verbatim>
 
    ## That reminds me
