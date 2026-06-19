@@ -36,10 +36,14 @@ Prompt 1 is the frame you set; prompts 2 to 5 are the questions you actually ask
 one at a time.
 
 ## Where it works
-The zettelkasten vault at `~/Vaults/zettelkasten` (`_inbox` and `Processed`). One
-note at a time, at the user's pace. Good first targets: the raw Kindle "Lit note"
-dumps in `_inbox` and the unlinked `Processed` notes (see the re-linking-pass card
-on the Personal / JEG board).
+The zettelkasten vault at `~/Vaults/zettelkasten`. Atomic notes live in `Notes/`.
+Sources to draw from: the raw Kindle "Lit note" dumps in `_inbox` and the unlinked
+notes in `Processed` (see the re-linking-pass card on the Personal / JEG board).
+One note at a time, at the user's pace.
+
+End state: `Processed` disappears entirely. Every note ends up either in `Notes/`
+(atomic and linked) or in `_inbox` (not yet processed). `Processed` is only a
+legacy source to drain, never a destination.
 
 ## Kindle dumps: one note per highlight
 A raw Kindle "Lit note" holds many highlights, and each highlight is its own
@@ -90,10 +94,12 @@ the `Notes/` folder.
    ## It's important because
    <his exact words>
    ```
-6. **Mark it done.** The finished atomic note lives in `Notes/`. Once all of a
-   source dump's highlights have been atomized this way, turn the original book
-   note into the source index (links to its atomic notes) and move it to
-   `Processed`.
+6. **Mark it done.** The finished atomic notes live in `Notes/`. Once all of a
+   source note's highlights have been atomized this way, **delete the original
+   source note.** It is just a remnant at that point; the atomic notes are the
+   real artifact and they already exist the way James wants. Do not create a
+   source index and do not move anything to `Processed`. End state: every note
+   lives in `Notes/` or `_inbox`, nothing else.
 7. Next note.
 
 ## Always close with this reminder
