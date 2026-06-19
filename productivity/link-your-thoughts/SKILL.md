@@ -30,9 +30,19 @@ note at a time, at the user's pace. Good first targets: the raw Kindle "Lit note
 dumps in `_inbox` and the unlinked `Processed` notes (see the re-linking-pass card
 on the Personal / JEG board).
 
-## The loop, one note at a time
-1. **Pick a note.** Let the user choose, else go oldest-first. Read it and show
-   the note (or the specific highlight/passage that was singled out).
+## Kindle dumps: one note per highlight
+A raw Kindle "Lit note" holds many highlights, and each highlight is its own
+thought. Do not process the dump as a single blob. Atomize it: split every
+highlight into its own atomic note and run the loop below on each highlight
+separately, as its own instance of linking a thought. Keep the original book note
+as the source index (its metadata plus links to the atomic notes it spawned) so
+provenance survives. Title each atomic note by its core idea (propose a title;
+let James adjust). The atomic notes are what get linked and land in `Processed`.
+
+## The loop, one unit at a time
+1. **Pick the next unit.** For a Kindle dump the unit is a single highlight turned
+   into its own atomic note (see above); otherwise the note itself. Let the user
+   choose, else go oldest-first. Show the highlight/passage being worked.
 2. **Set the frame** in a line, then ask the sequence below **one question at a
    time, waiting for each answer before moving to the next.** Do not answer for
    the user or guess their reasons. The asking is the point.
