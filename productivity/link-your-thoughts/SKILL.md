@@ -48,7 +48,8 @@ highlight into its own atomic note and run the loop below on each highlight
 separately, as its own instance of linking a thought. Keep the original book note
 as the source index (its metadata plus links to the atomic notes it spawned) so
 provenance survives. Title each atomic note by its core idea (propose a title;
-let James adjust). The atomic notes are what get linked and land in `Processed`.
+let James adjust). The finished atomic notes are what get linked, and they live in
+the `Notes/` folder.
 
 ## The loop, one unit at a time
 1. **Pick the next unit.** For a Kindle dump the unit is a single highlight turned
@@ -90,9 +91,10 @@ let James adjust). The atomic notes are what get linked and land in `Processed`.
    ## It's important because
    <his exact words>
    ```
-6. **Mark it done.** Once a note has at least one real connection it is genuinely
-   processed; move a raw `_inbox` dump into `Processed`. That is what "processed"
-   should actually mean from now on.
+6. **Mark it done.** The finished atomic note lives in `Notes/`. Once all of a
+   source dump's highlights have been atomized this way, turn the original book
+   note into the source index (links to its atomic notes) and move it to
+   `Processed`.
 7. Next note.
 
 ## Always close with this reminder
