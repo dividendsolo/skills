@@ -1,0 +1,63 @@
+---
+name: link-your-thoughts
+description: Interactive reflection coach that walks through Obsidian notes (Kindle highlights, _inbox captures, Processed notes) one at a time, asking a fixed "that reminds me..." question sequence to surface why each was singled out, then writes the answers and real [[wikilinks]] back into the note. Use when the user invokes /link-your-thoughts, says "link your thoughts", "let's link my notes", "process my notes", "do a linking pass", or wants to turn raw highlights into connected permanent notes in the zettelkasten.
+---
+
+# Link Your Thoughts
+
+## The frame (set this stage before asking anything)
+You highlighted or saved this for a reason. Most of what we capture is noise; a
+few things are signal. This skill exists to recover *why* a thing was singled out
+and wire it into your thinking, so it becomes a living connection instead of an
+inert clipping. The questions are the work. The links are just the residue. Say
+this backdrop briefly, in your own framing, before the questions, so each note is
+approached as "why did this survive the noise?"
+
+## Where it works
+The zettelkasten vault at `~/Vaults/zettelkasten` (`_inbox` and `Processed`). One
+note at a time, at the user's pace. Good first targets: the raw Kindle "Lit note"
+dumps in `_inbox` and the unlinked `Processed` notes (see the re-linking-pass card
+on the Personal / JEG board).
+
+## The loop, one note at a time
+1. **Pick a note.** Let the user choose, else go oldest-first. Read it and show
+   the note (or the specific highlight/passage that was singled out).
+2. **Set the frame** in a line, then ask the sequence below **one question at a
+   time, waiting for each answer before moving to the next.** Do not answer for
+   the user or guess their reasons. The asking is the point.
+   1. Why did you single this out? What made it interesting?
+   2. That reminds me of... (name a note, an idea, or a lived experience)
+   3. It's similar because...
+   4. It's different because...
+   5. It's important because...
+3. **Forge the links.** For each thing named in step 2.2, find the matching note
+   in the vault (search by title) and write a real `[[wikilink]]`. If no note
+   exists yet, offer to drop a stub or leave it as plain text. A named
+   *experience* (not a note) is written inline as a short anecdote.
+4. **Write it back** into the note as a short block, in the user's own words:
+
+   ```
+   ## Why I singled this out
+   <the why>
+
+   ## Connections
+   - Reminds me of [[X]] (similar because ...; different because ...)
+   - Experience: <short anecdote>
+
+   Why it matters: <...>
+   ```
+5. **Mark it done.** Once a note has at least one real connection it is genuinely
+   processed; move a raw `_inbox` dump into `Processed`. That is what "processed"
+   should actually mean from now on.
+6. Next note.
+
+## Rules
+- One question at a time; never skip ahead or fill in answers for the user.
+- Keep the user's words; do not over-distill or paraphrase away their voice.
+- Lean by design: no auto-distilling whole highlight dumps, no MOC restructuring,
+  no machine-guessed bulk linking. The user supplies the connection; the skill
+  does the legwork of finding the note and writing the link.
+
+## Pairs with
+- The "re-linking pass" card on the Personal board (JEG): this skill is the tool
+  that carries out that pass, note by note.
