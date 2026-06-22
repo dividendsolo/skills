@@ -13,6 +13,11 @@ Interview the user through their own investment screening checklist for an idea.
 
 Read that note at the start of every run and ask **exactly** what is there, in its order, in its sections. The user maintains and grows it as they refine their process - **you never author, reword, or add questions to it.** If you think of a question that is not there, that is not yours to add; at most suggest it to the user as a possible addition for *them* to decide on.
 
+**Vault layout (where runs live):**
+- Candidates to screen wait as notes in `~/Vaults/zettelkasten/Investing/inbox/` - one `<TICKER>.md` of the user's own research per name.
+- After a run, the ticker is filed by its disposition into `~/Vaults/zettelkasten/Investing/IN/`, `.../OUT/`, or `.../TOO HARD/`, as a folder `<TICKER>/` holding the user's research note plus the dated audit(s).
+- General mental models / hypotheticals (not pass/fail gates) live in `~/Vaults/zettelkasten/Investing thought experiments.md`.
+
 **Relationship to `/munger`:** `/munger` runs the idea through the mental-model lattice and does the reasoning. This skill is the opposite stance: a structured self-quiz where the *user* does the reasoning, gate by gate, against their own list.
 
 ## How to run it (interactive interview)
@@ -20,7 +25,7 @@ Read that note at the start of every run and ask **exactly** what is there, in i
 You are the interviewer and scorekeeper, **not the analyst**. The user does the thinking.
 
 ### 1. Get the idea
-Take the idea the user names - a thesis, a ticker, or a business. If they gave only a ticker, establish enough shared context to know what is being screened (and look up a fact if they ask), but you still do **not** answer the gates.
+Take the idea the user names - a thesis, a ticker, or a business. If it is a ticker waiting in `Investing/inbox/`, read that note first for the user's own research and context. If they gave only a bare ticker with no note, establish enough shared context to know what is being screened (and look up a fact if they ask). You still do **not** answer the gates.
 
 ### 2. Load the checklist
 Read the user's note at `~/Vaults/zettelkasten/Investing checklist.md`. Use its sections and questions verbatim. Ask only what the note contains; do not supplement it with questions of your own.
@@ -33,13 +38,18 @@ Read the user's note at `~/Vaults/zettelkasten/Investing checklist.md`. Use its 
   - You may supply a **fact** they ask for (a price, a figure, a definition), never the **judgement**.
 - Do not inject your own analysis. If you think they missed something, ask a **follow-up question** - never state the answer.
 
-### 4. Close
+### 4. Close on a disposition
 Play back the questions they cleared and any gaps they flagged, then ask **them** for the disposition - **In**, **Out**, or **Too hard** - and why. The call is the user's. Not financial advice.
 - **In** - a business they want to own at a reasonable price or better.
 - **Out** - not a business they want to own.
 - **Too hard** - cannot judge it confidently; set it aside rather than force a call.
 
-If the user wants a record of the run, write a dated audit note (question, their verbatim answer, any evidence pulled, per-gate verdict, and the overall In/Out/Too hard call) into the appropriate folder.
+### 5. Record the run (audit + filing)
+Write the run up as a dated audit note - each question, the user's **verbatim** answer, any evidence pulled, the per-gate verdict, and the overall In/Out/Too hard call - and file it in the vault:
+- Put it in the ticker's folder under its disposition bucket: `~/Vaults/zettelkasten/Investing/IN|OUT|TOO HARD/<TICKER>/`, named `<TICKER> checklist audit <YYYY-MM-DD>.md`.
+- Move the ticker's note out of `inbox/` into that same folder.
+- On a later re-run, add a new dated audit alongside the old one; if the disposition changes, move the folder to the new bucket and record the date and the reason it changed (e.g. circle of competence grew), so the history of the call stays visible over time.
+- Use the user's real run date; never invent one.
 
 ## Rules
 - **The user answers; you ask.** Never answer a gate, never pre-fill analysis, never check a gate off.
@@ -47,3 +57,4 @@ If the user wants a record of the run, write a dated audit note (question, their
 - **A reason is the bar.** If an answer has no "why", push once for it; "yes" alone does not clear a gate.
 - **One question at a time.** Ask, then wait.
 - **Facts on request, never judgement.** Look up a number if asked; the reasoning stays the user's.
+- **Verbatim in the audit.** Record the user's answers in their own words; never summarize or reword them.
