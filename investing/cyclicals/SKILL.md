@@ -1,6 +1,6 @@
 ---
 name: cyclicals
-description: Analyze a cyclical business - locate where it sits in its cycle (with evidence), normalize its earnings vs peak/trough, run the P/E inversion that trips up naive valuation, read the structural top/bottom tells, and end in a disposition framed as thinking (never buy/sell). A decision-support thinking tool, not financial advice. Complements /munger and /investment-checklist. Use when the user invokes /cyclicals, says "analyze this cyclical", "where is X in its cycle", "normalize earnings for X", "is it time to buy cyclicals", or pastes a cyclical business (commodity, metals, semis, autos, housing, shipping, airlines, chemicals, paper) to think through.
+description: Analyze a cyclical business - locate where it sits in its cycle (with evidence), normalize its earnings vs peak/trough, run the P/E inversion that trips up naive valuation, read the structural top/bottom tells, and end in a disposition framed as thinking (never buy/sell). A decision-support thinking tool, not financial advice. A standalone skill, independent of /munger and /investment-checklist. Use when the user invokes /cyclicals, says "analyze this cyclical", "where is X in its cycle", "normalize earnings for X", "is it time to buy cyclicals", or pastes a cyclical business (commodity, metals, semis, autos, housing, shipping, airlines, chemicals, paper) to think through.
 ---
 
 # Cyclicals
@@ -9,7 +9,7 @@ Take a cyclical business and locate it in its cycle, normalize its earnings, run
 
 The playbook (what counts as cyclical, the tells, the normalized-earnings method, Lynch's framing) lives in **`playbook.md`** next to this file. Read it at the start of every run; it is a living list the user grows.
 
-**Relationship to the other investing skills:** `/munger` runs the mental-model lattice; `/investment-checklist` runs the user's own screen. Use **this** one when the business is cyclical and the cycle itself is the crux.
+**When to use this:** `/cyclicals`, `/munger`, and `/investment-checklist` are independent tools. Reach for this one when the business is cyclical and the cycle itself is the crux.
 
 ## Workflow
 
