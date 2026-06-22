@@ -1,6 +1,6 @@
 ---
 name: startup
-description: Use when starting a new app or repo, or making an existing repo agent-ready (say "new app", "new repo", "create a project", "bootstrap this repo"). Sets up git, AGENTS.md + CLAUDE.md, .gitignore, and a per-repo Obsidian knowledge vault, offers the pinned default stack, then optionally pressure-tests scope (make-money) and locks in the domain language (grill-with-docs).
+description: Use when starting a new app or repo, or making an existing repo agent-ready (say "new app", "new repo", "create a project", "bootstrap this repo"). Sets up git, AGENTS.md + CLAUDE.md, .gitignore, and a per-repo Obsidian knowledge vault, offers the pinned default stack, accounts for deployment (preview + prod), then optionally pressure-tests scope (make-money) and locks in the domain language (grill-with-docs).
 ---
 
 # startup
@@ -134,6 +134,18 @@ money-making web app and the user says yes:
 
 Run this before the grill-with-docs step so the lens is active while you decide
 what the app is.
+
+## Account for deployment (preview + prod)
+
+Every app has to ship somewhere, and the preview / manual-QA flow depends on it, so deployment is a first-class concern at startup, not a thing bolted on after the build. startup does not have to set it up immediately or pick a launch date; it has to **account for it** so it never gets forgotten. The failure mode to prevent: a repo builds for weeks with no preview URL, so no PR can be QA'd without running locally.
+
+**Determine the target from the project shape** (infer it, do not ask if it is obvious):
+- Network-backed web app (the default stack) is **Vercel**: per-PR preview deploys plus production from `main`.
+- File / SQLite app is **Fly.io**.
+
+(See the deploy line in the pinned stack and the hosting-strategy ADR. You do not have to recommend timing here, just fix the target.)
+
+**Slot it into the phase progression deliberately.** When the build is broken into phased, thin-slice issues (during grill-with-docs / to-issues), deployment must appear as its own planned item: wiring the chosen target with the app's env vars, per-branch previews, and prod. Do not silently drop it, and do not auto-append it at the end. **Ask the user where in the progression it goes** ("where do you want to slot deploy / preview into the build-out?"). Landing it early means every PR from then on gets a preview URL for manual QA; landing it later keeps the first slices leaner. It is their call, but make sure the question is asked and a deployment issue actually exists in the plan.
 
 ## Lock in the shared language (the `grill-with-docs` step)
 
