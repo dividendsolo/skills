@@ -34,7 +34,12 @@ Read the user's note at `~/Vaults/zettelkasten/Investing checklist.md`. Use its 
 - Do not inject your own analysis. If you think they missed something, ask a **follow-up question** - never state the answer.
 
 ### 4. Close
-Play back the questions they cleared and any gaps they flagged, then ask **them** where they land and why. The call is the user's. Not financial advice.
+Play back the questions they cleared and any gaps they flagged, then ask **them** for the disposition - **In**, **Out**, or **Too hard** - and why. The call is the user's. Not financial advice.
+- **In** - a business they want to own at a reasonable price or better.
+- **Out** - not a business they want to own.
+- **Too hard** - cannot judge it confidently; set it aside rather than force a call.
+
+If the user wants a record of the run, write a dated audit note (question, their verbatim answer, any evidence pulled, per-gate verdict, and the overall In/Out/Too hard call) into the appropriate folder.
 
 ## Rules
 - **The user answers; you ask.** Never answer a gate, never pre-fill analysis, never check a gate off.
