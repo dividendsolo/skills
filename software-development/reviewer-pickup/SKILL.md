@@ -74,7 +74,8 @@ From what remains, pick the **one** that has waited longest (oldest into
 ### 2. Review it with real rigor
 - Confirm the CI gate is green (`gh pr checks N`). Red or pending CI (e.g. a
   `validate` check) is an automatic non-acceptance.
-- Read the issue's acceptance criteria.
+- Read the issue's acceptance criteria. Treat them as the literal checklist for the
+  Definition-of-Done gate in step 3, not as background.
 - Read the diff (`gh pr diff N`) and judge: correctness, security, whether it meets
   the ACs, and adherence to repo standards (`AGENTS.md`, `docs/adr/*`, and any
   project rules such as docket's ADR-0002 numbers-from-XBRL-only).
@@ -83,6 +84,32 @@ From what remains, pick the **one** that has waited longest (oldest into
   sign off on a diff you authored without a genuinely independent pass.
 
 ### 3. Decide and act
+
+**Definition-of-Done gate (STRICT, applies before ANY merge or `Done`).**
+`Done` means *every acceptance criterion is observed to be true*, not "the code that
+should make it true is merged and CI is green." Before you merge or set `Done`:
+- Walk the ACs one by one. For each, point to concrete evidence it is satisfied (a
+  test, a CI artifact, an observed response, a screenshot). "The diff looks like it
+  would do this" is NOT evidence.
+- An AC that asserts **runtime, production, or externally-triggered behavior** (a
+  cron/webhook firing green, an endpoint returning 200 in prod, a notification
+  actually arriving, "appears in the feed the morning after", a migration having run
+  on the live DB) can only be closed by **observing it** (or a green
+  `workflow_dispatch` / manual run). If you cannot observe it in this review you may
+  NOT auto-merge to `Done`: park it (`Needs Manual QA` to James) like the manual-QA
+  gate, naming the unobserved AC and how to check it.
+- **No partial credit on compound ACs.** An "X and/or Y" or "X where feasible"
+  criterion is satisfied only when each named deliverable it lists is actually met.
+  Verifying one branch (e.g. the manual path) does NOT close an AC that also names
+  another (e.g. the cron path); the unmet branch is an open AC, not a footnote.
+- Shipping config-dependent automation (a cron, a webhook, a scheduled job) without
+  its secrets/config provisioned and seen working is NOT done, however green the CI
+  and clean the diff. If provisioning is HITL, the card stays open (or a linked
+  `Ready for Human` follow-up carries it) until the trigger is observed green once.
+
+If any AC fails this gate the card is not `Done`: kick it back (`Changes Requested`)
+or park it for the human, per the branches below.
+
 - **Blockers, or CI not green:** post a changes-requested review with specific
   comments (`gh pr review N --request-changes --body "..."`), add a board comment
   summarising what must change, and move the issue to `Changes Requested`. Then
@@ -182,6 +209,11 @@ keeps its board in Linear but its PRs on GitHub.
 
 ## Guardrails
 - **ONE PR per run, then stop.** This skill never loops; the external runner does.
+- **`Done` = acceptance criteria observed, not code merged.** Never merge or mark
+  `Done` until every AC passes the Definition-of-Done gate (step 3): production and
+  externally-triggered ACs need an observed green run, and config-dependent
+  automation needs its secrets provisioned and seen working, or the card stays open /
+  parks for the human. Green CI plus a clean diff is necessary, never sufficient.
 - Never merge or approve when CI is not green or you found a blocker.
 - **Never merge a card carrying the `Needs Manual QA` label.** Approve it, park it in
   `In Review`, and ping James (the manual-QA gate in step 3). He merges after QA, or

@@ -197,6 +197,16 @@ self-merge, do not push the merge button, do not auto-merge via CI, do not delet
 the branch. The reviewer signals completion by moving the card to Done (or to
 Changes Requested, which comes back to you on the next pickup).
 
+**Acceptance-criteria honesty (STRICT).** Do not tick an AC because the code that
+would make it true is merged and the tests pass. An AC is met only when you can show
+it is true. If an AC needs evidence you cannot produce here (production secrets or
+credentials, observing a deployed cron/webhook actually firing, a "morning after"
+behavior, a migration on the live DB), you may NOT silently mark it done: either flag
+it via the Manual-QA gate below so the reviewer parks it for James, or split it into
+a linked `Ready for Human` follow-up and name that in your closing summary. Shipping
+config-dependent automation (cron, webhook, scheduled job) without its config
+provisioned and seen working is not done.
+
 **Manual-QA flag (do this as you move to In Review).** If your closing summary's
 **Manual QA** is a real item (anything other than "none needed"), the change needs
 a human check before it can ship. So that the reviewer parks it instead of
