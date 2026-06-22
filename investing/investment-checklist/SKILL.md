@@ -1,6 +1,6 @@
 ---
-name: checklist
-description: Interview the user through their OWN investment screening checklist - you ASK the questions one at a time and the USER answers and clears each gate; the tool never answers, never invents questions, and never checks a gate off. The questions are James's own and live in his Obsidian vault (the source of truth); ask exactly what is there. A decision-support thinking tool, not financial advice. Complements /munger. Use when the user invokes /checklist, says "run this through my investment checklist", "screen this idea", "checklist this", or pastes a thesis/ticker to be screened.
+name: investment-checklist
+description: Interview the user through their OWN investment screening checklist - you ASK the questions one at a time and the USER answers and clears each gate; the tool never answers, never invents questions, and never checks a gate off. The questions are James's own and live in his Obsidian vault (the source of truth); ask exactly what is there. A decision-support thinking tool, not financial advice. Complements /munger. Use when the user invokes /investment-checklist, says "run this through my investment checklist", "screen this idea/stock/ticker", or pastes a thesis/ticker to be screened.
 ---
 
 # Investment Checklist
