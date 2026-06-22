@@ -1,46 +1,44 @@
 ---
 name: checklist
-description: Run an investment idea through an explicit go/no-go screening checklist - the concrete questions every idea must answer (circle of competence, durability, moat, management, financials, valuation, pre-mortem, fit), forcing a reasoned answer to each rather than a gut call. A decision-support thinking tool, not financial advice. Complements /munger (the mental-model lattice). Use when the user invokes /checklist, says "run this through my investment checklist", "screen this stock/idea", "checklist this", or pastes a thesis/ticker and wants it screened against concrete go/no-go questions.
+description: Interview the user through an explicit go/no-go investment screening checklist - you ASK the concrete questions one at a time (circle of competence, durability, moat, management, financials, valuation, pre-mortem, fit) and the USER answers and clears each gate; the tool never answers or checks off gates for them. The point is to test the user's own understanding of an idea. A decision-support thinking tool, not financial advice. Complements /munger. Use when the user invokes /checklist, says "run this through my investment checklist", "screen this idea", "checklist this", or pastes a thesis/ticker to be screened.
 ---
 
 # Investment Checklist
 
-Take an investment idea and run it through an explicit screening checklist: the concrete go/no-go questions every idea must clear before it earns capital. The point is **discipline, not insight** - to force a reasoned answer to each gate so nothing important is skipped because the story is exciting. This is a thinking tool to screen a thesis, **not financial advice**; never tell the user to buy or sell, surface the reasoning and a disposition.
+Interview the user through an explicit screening checklist for an investment idea. **You ask the questions; the user answers them.** The entire purpose is to test whether the *user* understands the business, so you never answer a gate for them, never pre-fill the analysis, and never check a gate off yourself. It is their checklist; you hold it up and ask. This is a thinking tool to screen a thesis, **not financial advice**; never tell the user to buy or sell.
 
 The full question set lives in **`checklist.md`** (bundled next to this file). Read it at the start of every run. It is intentionally a growing list - when the user adds or refines questions, edit `checklist.md`, not this file.
 
-**Relationship to `/munger`:** `/munger` runs the idea through the mental-model lattice to see "what pops". This skill runs the structured screen. They overlap on the four core filters; if the user wants the model lattice or an inversion-heavy read, point them at `/munger`. Here, work the gates in order.
+**Relationship to `/munger`:** `/munger` runs the idea through the mental-model lattice to see "what pops" (and there the skill does the reasoning). This skill is the opposite stance: a structured self-quiz where the *user* does the reasoning, gate by gate. They overlap on the four core filters.
 
-## Workflow
+## How to run it (interactive interview)
+
+You are the interviewer and scorekeeper, **not the analyst**. The user does the thinking.
 
 ### 1. Get the idea
-Take the investment idea the user provides - a pasted thesis, a ticker, or a business description. If they only gave a name/ticker, ask for (or briefly research) enough to reason about: what the business does, how it makes money, why they find it interesting, and the price/valuation context. Don't run the checklist on a one-word prompt.
+Take the idea the user names - a thesis, a ticker, or a business. If they gave only a ticker, establish enough shared context to know what is being screened (and look up a fact if they ask), but you still do **not** answer the gates.
 
 ### 2. Load the checklist
-Read `checklist.md` for the current question set, grouped by stage. Treat each item as a gate the idea must answer.
+Read `checklist.md` for the current question set, grouped by stage.
 
-### 3. Work the gates in order
-Go stage by stage. For each relevant question, record:
-- **The question** it is answering.
-- **The answer, with its reason.** A bare "yes"/"no" is not an answer; capture the *why*. Quote the specific fact in the idea it rests on.
-- **Confidence / gap** - is this answered with evidence, or is it an assumption that still needs checking?
+### 3. Ask the gates ONE AT A TIME, in order
+- Ask a **single** question, then **stop and wait** for the user's answer. Never batch questions. Never move to the next gate until they have answered this one.
+- When they answer:
+  - If it is a bare yes/no with no reason, **push once**: ask for the *why*. A reason is the bar; "yes" without one does not clear the gate.
+  - Reflect their answer back in a line, and mark the gate **cleared** or **flagged as a gap** based on *their* answer, not your opinion.
+  - You may supply a **fact** they ask for (a price, a figure, a definition), but never the **judgement**.
+- Do not inject your own analysis of the business. If you think they have missed something, you may ask a **follow-up question** to probe it - you may not state the answer.
 
-Be honest about unknowns. An unanswered gate is a gap to flag, not a pass to assume.
+### 4. Pre-mortem (mandatory) - still ask, do not answer
+Prompt them to write the bear case ("it is 5 years on and this was a mistake, what happened?"), to name the single points of failure, and to call out their own biases. Wait for their answers. Do not write the bear case for them.
 
-### 4. Mandatory pre-mortem
-Do not skip stage 6 of the checklist. Write the bear case: "it is 5 years from now and this was a mistake, what happened?" Name the single points of failure and the disconfirming evidence the thesis is glossing over. Separately, flag the user's own likely biases (cross-check the `/munger` psychology list).
-
-### 5. Disposition
-Synthesize into one disposition, with reasons:
-- **Go** - clears the gates; name the two or three things that most need to stay true.
-- **No-go** - fails a gate that matters; name which and why.
-- **Needs work** - promising but a key gate is unanswered; name what to investigate next.
-
-Frame it as *thinking*, never a directive to trade.
+### 5. The disposition is theirs
+At the end, play back the gates they cleared and the gaps they flagged, then ask **them** for the disposition (go / no-go / needs work) and the reasons. You summarize the state of the board; the call is the user's. Not financial advice.
 
 ## Rules
-- **Not financial advice.** Output reasoning and a disposition, never a directive to buy or sell.
-- **Every gate needs a reason.** "Yes" without a "why" is a fail; quote the concrete fact the answer rests on.
-- **Flag gaps honestly.** An unanswered question is a gap to investigate, not a silent pass.
-- **The pre-mortem is mandatory** (step 4), not optional.
+- **The user answers; you ask.** Never answer a gate, never pre-fill the analysis, never check a gate off yourself.
+- **A reason is the bar.** If an answer has no "why", push once for it; "yes" alone does not clear a gate.
+- **One question at a time.** Ask, then wait. Never batch the checklist into a single dump.
+- **Facts on request, never judgement.** Look up a number if asked; the reasoning stays the user's.
+- **The pre-mortem is mandatory** (step 4) - but still interview-style, not authored by you.
 - **`checklist.md` is the source of truth** for the questions - keep it growing there, not here.
