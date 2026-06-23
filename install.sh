@@ -3,6 +3,14 @@
 # the Claude Code skills dir so local edits are live. Idempotent and non-destructive:
 # a pre-existing real (non-symlink) destination is left untouched and reported.
 #
+# Also wires the UI-craft enforcement hooks (design-rules build-time guardrail +
+# landing-audit verify nudge) that live beside their skills under
+# <cat>/<skill>/hooks/*.sh: it symlinks them into ~/.claude/hooks and registers
+# them in ~/.claude/settings.json, so the guardrail travels to every machine
+# (including the dev box) on the same sync path as the skills. Unlike skills, the
+# repo is the source of truth for these hooks, so a stale real hook file IS
+# replaced with the symlink.
+#
 # Modes:
 #   ./install.sh           link any MISSING skills, then wire up the post-merge hook
 #                          so future `git pull`s self-heal. Quiet about already-linked
@@ -70,12 +78,79 @@ for skill in "$REPO"/*/*/SKILL.md; do
   done
 done
 
+# --- UI-craft enforcement hooks -------------------------------------------------
+# Symlink each hook script (beside its skill) into ~/.claude/hooks, then register
+# it in ~/.claude/settings.json. Repo wins: a stale real hook file is replaced.
+CLAUDE_BASE="$(dirname "$CLAUDE_DEST")"            # ~/.claude
+HOOKS_DEST="$CLAUDE_BASE/hooks"
+SETTINGS="$CLAUDE_BASE/settings.json"
+HOOK_SCRIPTS=(
+  "software-development/design-rules/hooks/design-rules-reminder.sh"
+  "marketing/landing-audit/hooks/landing-audit-reminder.sh"
+)
+for rel in "${HOOK_SCRIPTS[@]}"; do
+  src="$REPO/$rel"
+  dest="$HOOKS_DEST/$(basename "$rel")"
+  [ -f "$src" ] || continue
+  if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
+    ok=$((ok + 1))
+  else
+    missing=$((missing + 1))
+    if [ "$CHECK" = 1 ]; then
+      echo "MISSING hook $dest"
+    else
+      mkdir -p "$HOOKS_DEST"
+      ln -sfn "$src" "$dest"          # -f: repo is source of truth, replace stale files
+      echo "link   hook $dest -> $src"
+      linked=$((linked + 1))
+    fi
+  fi
+done
+
+# Register the two hooks in settings.json (idempotent upsert keyed on command).
+DR_CMD="bash $HOOKS_DEST/design-rules-reminder.sh"
+LA_CMD="bash $HOOKS_DEST/landing-audit-reminder.sh"
+settings_has() {  # event command -> 0 if a hook with that command is registered
+  [ -f "$SETTINGS" ] || return 1
+  jq -e --arg e "$1" --arg c "$2" \
+    '[ .hooks[$e][]?.hooks[]?.command ] | index($c) != null' "$SETTINGS" >/dev/null 2>&1
+}
+if settings_has PreToolUse "$DR_CMD" && settings_has Stop "$LA_CMD"; then
+  : # already registered
+else
+  missing=$((missing + 1))
+  if [ "$CHECK" = 1 ]; then
+    echo "MISSING hook registration in $SETTINGS"
+  elif command -v jq >/dev/null 2>&1; then
+    base='{}'; [ -f "$SETTINGS" ] && base="$(cat "$SETTINGS")"
+    tmp="$(mktemp)"
+    if printf '%s' "$base" | jq \
+        --arg dr "$DR_CMD" --arg la "$LA_CMD" '
+        def upsert(ev; entry; cmd):
+          .hooks[ev] = (((.hooks[ev]) // [])
+            | map(select(((.hooks // []) | any(.command == cmd)) | not)) + [entry]);
+        .hooks = (.hooks // {})
+        | upsert("PreToolUse"; {matcher:"Write|Edit|MultiEdit", hooks:[{type:"command", command:$dr, timeout:10}]}; $dr)
+        | upsert("Stop"; {hooks:[{type:"command", command:$la, timeout:10, statusMessage:"Checking for landing-page edits"}]}; $la)
+        ' > "$tmp" && [ -s "$tmp" ]; then
+      mv "$tmp" "$SETTINGS"
+      echo "hook   registered design-rules + landing-audit hooks in $SETTINGS"
+      linked=$((linked + 1))
+    else
+      rm -f "$tmp"
+      echo "warn   hook registration failed; $SETTINGS left unchanged"
+    fi
+  else
+    echo "skip   hook registration ($SETTINGS): jq not found"
+  fi
+fi
+
 if [ "$CHECK" = 1 ]; then
   if [ "$missing" -gt 0 ]; then
-    echo "drift: $missing skill link(s) missing on this machine. Run ./install.sh"
+    echo "drift: $missing skill/hook item(s) missing on this machine. Run ./install.sh"
     exit 1
   fi
-  echo "in sync: every skill is linked ($ok link(s))."
+  echo "in sync: every skill linked and hooks wired ($ok item(s))."
   exit 0
 fi
 

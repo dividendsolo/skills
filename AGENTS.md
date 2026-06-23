@@ -13,9 +13,15 @@ the occasional bundled bash script. Categories in use: `software-development`,
 ## Commands
 
 ```bash
-./install.sh           # symlink any missing skills into both runtimes; wire the self-healing post-merge hook
-./install.sh --check   # report link drift without changing anything (exit 1 if any link is missing)
+./install.sh           # symlink any missing skills into both runtimes; wire the design-rules + landing-audit enforcement hooks into Claude Code; wire the self-healing post-merge hook
+./install.sh --check   # report skill-link AND hook-wiring drift without changing anything (exit 1 if anything is missing)
 ```
+
+The UI-craft enforcement hooks live beside their skills at
+`software-development/design-rules/hooks/` and `marketing/landing-audit/hooks/`.
+`install.sh` symlinks them into `~/.claude/hooks/` and registers them in
+`~/.claude/settings.json` (idempotent), so the design-rules build-time guardrail
+travels to every machine on the same sync path as the skills.
 
 ## Conventions
 
