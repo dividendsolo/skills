@@ -36,10 +36,10 @@ on the current branch. If there is an OPEN PR for it, this is the whole job:
    feature branch. If the tracker did not auto-advance the ticket on merge, set it
    to **Done** (the GitHub↔Linear/Projects integration usually does this for you).
 4. **Report** the merge commit SHA and that the PR + ticket are shipped. Then
-   STOP — skip Steps 1-4. The PR's green CI is the gate; there is nothing
+   STOP — skip Steps 1-5. The PR's green CI is the gate; there is nothing
    uncommitted to validate and nothing to commit to `main`.
 
-Only fall through to Steps 1-4 below when there is **no** open PR for the branch.
+Only fall through to Steps 1-5 below when there is **no** open PR for the branch.
 
 ## Workflow (direct-to-main mode)
 
@@ -102,12 +102,31 @@ run. The full suite is CI's job; here we run what the change can break.
 4. **Everything selected must pass before commit** — same stop condition as
    Step 1. A failure here means fix or report, do not ship.
 
-### Step 3 — Session log
+### Step 3 — Design-rules check on touched UI
+
+After the tests pass, hold the UI the diff touched to the **design-rules** rulebook
+— the same blast-radius scoping as Step 2, craft instead of behaviour. No UI in the
+diff → skip to Step 4.
+
+1. **Find the touched UI files** — from the same touched-files set as Step 2, keep
+   what renders user-facing UI (`*.tsx`/`*.jsx`, `*.css`, files under `components/`
+   or `app/`); drop `app/api/*`, `*/route.ts(x)`, server-only modules, and
+   `*.test.*` / `*.spec.*`. If none remain, say so and skip to Step 4.
+2. **Invoke the `design-rules` skill** and review each touched surface against it:
+   every element earns its place; hierarchy by size/contrast/spacing; 3 fonts / 3
+   colors and 60/30/10; calm and whitespace; CTA prominence; and the mobile rules
+   (no side-by-side, no hover-only affordances, thumb-sized touch targets). For a
+   public landing/marketing surface, run `/landing-audit` rather than eyeballing.
+3. **Fix cheap, clear breaks in passing; flag the rest** for the user. Mobile
+   correctness at 390px gates the ship; a desktop-only cosmetic issue does not
+   (CLAUDE.md mobile-first).
+
+### Step 4 — Session log
 
 If the project keeps `notes/session-log.md`, append a short entry: what changed,
 decisions made, gotchas, and anything worth promoting to CLAUDE.md.
 
-### Step 4 — Commit and push
+### Step 5 — Commit and push
 
 This is a **solo operation: commit directly on `main` and push.** No feature
 branches, no PRs. (Only create a branch / open a PR if the user explicitly asks
@@ -130,5 +149,7 @@ for a review step.)
 - "Relevant" means the diff's blast radius — Vitest `related` for unit/component
   plus any touched or surface-matching e2e specs. Don't run the full suite to
   ship; don't skip the relevant slice either.
+- When the diff touches UI, run the design-rules check (Step 3) on the touched UI
+  files before commit — same blast-radius scoping as the tests, for craft.
 - Do not commit secrets or `.env*` files.
 - Report the commit SHA and what was pushed when done.

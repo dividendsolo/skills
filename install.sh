@@ -3,13 +3,14 @@
 # the Claude Code skills dir so local edits are live. Idempotent and non-destructive:
 # a pre-existing real (non-symlink) destination is left untouched and reported.
 #
-# Also wires the UI-craft enforcement hooks (design-rules build-time guardrail +
-# landing-audit verify nudge) that live beside their skills under
-# <cat>/<skill>/hooks/*.sh: it symlinks them into ~/.claude/hooks and registers
-# them in ~/.claude/settings.json, so the guardrail travels to every machine
+# Also wires the landing-audit verify-nudge hook that lives beside its skill under
+# marketing/landing-audit/hooks/*.sh: it symlinks it into ~/.claude/hooks and
+# registers it in ~/.claude/settings.json, so the nudge travels to every machine
 # (including the dev box) on the same sync path as the skills. Unlike skills, the
-# repo is the source of truth for these hooks, so a stale real hook file IS
-# replaced with the symlink.
+# repo is the source of truth for this hook, so a stale real hook file IS replaced
+# with the symlink. Design-rules is intentionally NOT a hook: its rulebook is a DRY
+# reference verified at audit time (landing-audit) and ship time (shipit). This
+# script also strips any legacy design-rules hook a prior install left behind.
 #
 # Modes:
 #   ./install.sh           link any MISSING skills, then wire up the post-merge hook
@@ -85,9 +86,21 @@ CLAUDE_BASE="$(dirname "$CLAUDE_DEST")"            # ~/.claude
 HOOKS_DEST="$CLAUDE_BASE/hooks"
 SETTINGS="$CLAUDE_BASE/settings.json"
 HOOK_SCRIPTS=(
-  "software-development/design-rules/hooks/design-rules-reminder.sh"
   "marketing/landing-audit/hooks/landing-audit-reminder.sh"
 )
+# Legacy hook from a prior install (design-rules is no longer a hook): remove its
+# symlink so it stops firing. Idempotent — silent if already gone.
+LEGACY_HOOK="$HOOKS_DEST/design-rules-reminder.sh"
+if [ -L "$LEGACY_HOOK" ] || [ -e "$LEGACY_HOOK" ]; then
+  if [ "$CHECK" = 1 ]; then
+    echo "STALE  hook $LEGACY_HOOK (design-rules is no longer a hook; run ./install.sh)"
+    missing=$((missing + 1))
+  else
+    rm -f "$LEGACY_HOOK"
+    echo "unlink hook $LEGACY_HOOK (design-rules is no longer a hook)"
+    linked=$((linked + 1))
+  fi
+fi
 for rel in "${HOOK_SCRIPTS[@]}"; do
   src="$REPO/$rel"
   dest="$HOOKS_DEST/$(basename "$rel")"
@@ -107,16 +120,21 @@ for rel in "${HOOK_SCRIPTS[@]}"; do
   fi
 done
 
-# Register the two hooks in settings.json (idempotent upsert keyed on command).
-DR_CMD="bash $HOOKS_DEST/design-rules-reminder.sh"
+# Register the landing-audit hook in settings.json (idempotent upsert keyed on
+# command), and strip any legacy design-rules PreToolUse hook an older install wired.
 LA_CMD="bash $HOOKS_DEST/landing-audit-reminder.sh"
 settings_has() {  # event command -> 0 if a hook with that command is registered
   [ -f "$SETTINGS" ] || return 1
   jq -e --arg e "$1" --arg c "$2" \
     '[ .hooks[$e][]?.hooks[]?.command ] | index($c) != null' "$SETTINGS" >/dev/null 2>&1
 }
-if settings_has PreToolUse "$DR_CMD" && settings_has Stop "$LA_CMD"; then
-  : # already registered
+settings_has_legacy_dr() {  # 0 if a stale design-rules hook is still registered
+  [ -f "$SETTINGS" ] || return 1
+  jq -e '[ .hooks.PreToolUse[]?.hooks[]?.command // empty ] | any(test("design-rules-reminder"))' \
+    "$SETTINGS" >/dev/null 2>&1
+}
+if settings_has Stop "$LA_CMD" && ! settings_has_legacy_dr; then
+  : # landing-audit registered and no stale design-rules hook
 else
   missing=$((missing + 1))
   if [ "$CHECK" = 1 ]; then
@@ -125,16 +143,19 @@ else
     base='{}'; [ -f "$SETTINGS" ] && base="$(cat "$SETTINGS")"
     tmp="$(mktemp)"
     if printf '%s' "$base" | jq \
-        --arg dr "$DR_CMD" --arg la "$LA_CMD" '
+        --arg la "$LA_CMD" '
         def upsert(ev; entry; cmd):
           .hooks[ev] = (((.hooks[ev]) // [])
             | map(select(((.hooks // []) | any(.command == cmd)) | not)) + [entry]);
         .hooks = (.hooks // {})
-        | upsert("PreToolUse"; {matcher:"Write|Edit|MultiEdit", hooks:[{type:"command", command:$dr, timeout:10}]}; $dr)
+        # Drop any legacy design-rules PreToolUse hook, then ensure landing-audit Stop.
+        | .hooks.PreToolUse = [ (.hooks.PreToolUse // [])[]
+            | select(((.hooks // []) | any(.command | test("design-rules-reminder"))) | not) ]
+        | (if (.hooks.PreToolUse | length) == 0 then .hooks |= del(.PreToolUse) else . end)
         | upsert("Stop"; {hooks:[{type:"command", command:$la, timeout:10, statusMessage:"Checking for landing-page edits"}]}; $la)
         ' > "$tmp" && [ -s "$tmp" ]; then
       mv "$tmp" "$SETTINGS"
-      echo "hook   registered design-rules + landing-audit hooks in $SETTINGS"
+      echo "hook   registered landing-audit hook (stripped any legacy design-rules hook) in $SETTINGS"
       linked=$((linked + 1))
     else
       rm -f "$tmp"

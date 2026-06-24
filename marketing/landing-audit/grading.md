@@ -74,10 +74,14 @@ Group the report into these six. Set each meter from how its members scored:
 
 ## Craft & interaction lens (reported, NOT scored)
 
-These come from the homepage-craft rubric. They overlap the 31 in places
-(focal point ~ #20, value-prop-in-5s ~ #30, competing CTAs ~ #22, plain language ~ #7) —
-don't double-count those. Report only the genuinely additive items separately,
-and keep them OUT of the numeric score (we don't fold in what the 31 don't measure):
+This lens IS the **design-rules** rulebook — invoke the `design-rules` skill and
+grade the rendered page against it (hierarchy by size/contrast/spacing, 3-font and
+3-color discipline, 60/30/10, calm/whitespace, the hero's three jobs, CTA prominence,
+the mobile rules). It is the single source of truth; do not restate it here.
+Its items overlap the 31 in places (focal point ~ #20, value-prop-in-5s ~ #30,
+competing CTAs ~ #22, plain language ~ #7) — don't double-count those. Report only
+the genuinely additive items separately, and keep them OUT of the numeric score (we
+don't fold in what the 31 don't measure). The recurring additive ones:
 
 - **Micro-interactions** — hover/focus states on every interactive element; press/loading feedback on buttons + forms; scroll-triggered reveals with tasteful easing; motion that reinforces meaning vs gratuitous; respects `prefers-reduced-motion`. Inspect source/CSS (screenshots are static).
 - **Time-to-paint / LCP** — a slow hero ruins the first 15ms. Note how fast above-the-fold renders.

@@ -1,11 +1,13 @@
 ---
 name: design-rules
-description: The hard rules of UI craft and feel. Every element must earn its place and do its one job well; the page must be tight, clean, calm, and genuinely pleasant to use. Use when building or editing ANY user-facing UI, page, screen, hero, or component, or when the user mentions design, layout, hierarchy, typography, color, spacing, contrast, CTAs, or micro-interactions. Build with this, then verify with landing-audit.
+description: The canonical rulebook of UI craft and feel. Every element must earn its place and do its one job well; the surface must be tight, clean, calm, and genuinely pleasant to use. The single source of truth that landing-audit grades against and that shipit checks touched UI files against before commit. Use when building or editing ANY user-facing UI, page, screen, hero, or component, or when the user mentions design, layout, hierarchy, typography, color, spacing, contrast, CTAs, or micro-interactions.
 ---
 
 # Design Rules
 
-Not negotiable. Invoke this skill and build to it EVERY time you create or edit any frontend / user-facing surface -- page, feature, component, element, color, button, navigation, micro-interaction -- and hold the work to it WHILE building, never as a cleanup pass afterward. This is a guardrail, not a checklist we follow sometimes. "Go off and build whatever, then come back and fix it later" is exactly what this prevents: it is too much work and too much to maintain. The only things out of scope are pure backend with no UI (the database and the API / server routes).
+Not negotiable. These are the hard rules of UI craft for THIS product, and they hold every time you create or edit any frontend / user-facing surface -- page, feature, component, element, color, button, navigation, micro-interaction. Build to them while you write the UI, not as a cleanup pass afterward. The only things out of scope are pure backend with no UI (the database and the API / server routes).
+
+This rulebook is the single source of truth. It is verified, not enforced by a build-time hook: `landing-audit` grades a landing page against these rules, and `shipit` checks the touched UI files against them after tests and before commit (the same way it scopes tests to the diff's blast radius). Keep the rules here; both of those skills point back to this file rather than restating it.
 
 We are not generalists. The UI is specific to THIS product, and it earns "premium" by being minimal, tight, calm, and practically relevant to the user at all times -- not by adding more. Public-facing pages get the most scrutiny. We will make mistakes; we fix them by updating these rules, not by abandoning them.
 

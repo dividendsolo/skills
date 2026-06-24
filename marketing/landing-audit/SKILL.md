@@ -10,7 +10,7 @@ Grade a landing page and hand back a scored, prioritized to-do list. The output 
 
 Two rubrics, merged:
 - **Scored core** = Marc Lou's **31 viral-product principles** (verbatim in [`31-principles.md`](31-principles.md)) → one reproducible number out of 100.
-- **Unscored lens** = visual **craft & interaction** (micro-interactions, motion, load speed) — reported alongside, kept out of the number.
+- **Unscored lens** = the **design-rules** rulebook (UI craft & feel: hierarchy, type, color, spacing, calm, micro-interactions, motion, load speed) — invoke the `design-rules` skill and grade the rendered page against it, reported alongside but kept out of the number. That skill is the single source of truth; this audit applies it, it does not restate it.
 
 Detection tiers, the scoring formula, categories, and the report shape all live in
 [`grading.md`](grading.md). Read it before grading.

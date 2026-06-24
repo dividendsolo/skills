@@ -13,15 +13,16 @@ the occasional bundled bash script. Categories in use: `software-development`,
 ## Commands
 
 ```bash
-./install.sh           # symlink any missing skills into both runtimes; wire the design-rules + landing-audit enforcement hooks into Claude Code; wire the self-healing post-merge hook
+./install.sh           # symlink any missing skills into both runtimes; wire the landing-audit verify-nudge hook into Claude Code; wire the self-healing post-merge hook
 ./install.sh --check   # report skill-link AND hook-wiring drift without changing anything (exit 1 if anything is missing)
 ```
 
-The UI-craft enforcement hooks live beside their skills at
-`software-development/design-rules/hooks/` and `marketing/landing-audit/hooks/`.
-`install.sh` symlinks them into `~/.claude/hooks/` and registers them in
-`~/.claude/settings.json` (idempotent), so the design-rules build-time guardrail
-travels to every machine on the same sync path as the skills.
+The landing-audit verify-nudge hook lives beside its skill at
+`marketing/landing-audit/hooks/`. `install.sh` symlinks it into `~/.claude/hooks/`
+and registers it in `~/.claude/settings.json` (idempotent), so the nudge travels to
+every machine on the same sync path as the skills; it also strips any legacy
+design-rules hook a prior install wired. Design-rules is intentionally NOT a hook:
+its rulebook is verified at audit time (`landing-audit`) and ship time (`shipit`).
 
 ## Conventions
 
